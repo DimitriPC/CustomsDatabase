@@ -20,12 +20,8 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 from .models import User
-
-# Import models so Flask-Migrate sees them
-from HelloFlask import tables
-
-# Import routes last
-import HelloFlask.routes
+from . import models
+from . import routes
 
 
 @login_manager.user_loader
