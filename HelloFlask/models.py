@@ -14,6 +14,7 @@ class User():
 
     user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(unique=True, nullable=False)
+    real_name: Mapped[str] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(db.String(60), nullable=False)
     is_admin: Mapped[bool] = mapped_column(default=False)
     elo_rating: Mapped[int | None]
@@ -33,14 +34,9 @@ class Match():
 
     match_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
-    home_team_id: Mapped[int] = mapped_column(ForeignKey("team.id"), nullable=False) #Home team defends first
-    away_team_id: Mapped[int] = mapped_column(ForeignKey("team.id"), nullable=False)
     first_to: Mapped[int]
     date_match: Mapped[datetime | None]
-    status: Mapped[str] #Ongoing or Completed
-    winner: Mapped[int] = mapped_column(ForeignKey("team.id"), nullable=True)
-    home_team_score: Mapped[int]
-    away_team_score: Mapped[int]
+    status: Mapped[str] #Ongoing or Completed    
 
     match_teams: Mapped[List["MatchTeam"]] = relationship(back_populates="match")
     games: Mapped[List["Game"]] = relationship(back_populates="match")
@@ -59,8 +55,10 @@ class MatchTeam():
 
     match: Mapped["Match"] = relationship(back_populates="match_teams")
 
-    home_games: Mapped[List["Game"]] = relationship(back_populates="home_team")
-    away_games: Mapped[List["Game"]] = relationship(back_populates="away_team")
+    home_games: Mapped[List["Game"]] = relationship(back_populates="home_team",
+                                        foreign_keys="[Game.home_team_id]")
+    away_games: Mapped[List["Game"]] = relationship(back_populates="away_team",
+                                        foreign_keys="[Game.away_team_id]")
 
     participants: Mapped[List["MatchParticipant"]] = relationship(back_populates="match_team")
 
