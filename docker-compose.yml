@@ -7,12 +7,14 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "5000:5000"
+      - "5001:5000"
+    env_file:
+      - .env
     environment:
-      DATABASE_URL: postgresql://dimitri:4939@db:5432/mydb
+      DATABASE_URL: ${DATABASE_URL}
       FLASK_APP: runserver.py
       FLASK_ENV: development
-      SECRET_KEY: super-long-random-string
+      SECRET_KEY: ${SECRET_KEY}
     restart: unless-stopped
     volumes:
       - .:/app
@@ -22,9 +24,9 @@ services:
     container_name: customsdb
     restart: unless-stopped
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: dimitri
-      POSTGRES_PASSWORD: 4939
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
