@@ -22,9 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app\models.py" />
-    <Compile Include="app\routes.py" />
-    <Compile Include="app\__init__.py" />
+    <Compile Include="HelloFlask\models.py" />
+    <Compile Include="HelloFlask\routes.py" />
+    <Compile Include="HelloFlask\__init__.py" />
     <Compile Include="DB1.0.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\build_env.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\cache.py" />
@@ -442,8 +442,8 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\static\" />
-    <Folder Include="app\templates\" />
+    <Folder Include="HelloFlask\static\" />
+    <Folder Include="HelloFlask\templates\" />
     <Folder Include="env\" />
     <Folder Include="env\Include\" />
     <Folder Include="env\Lib\" />
@@ -537,9 +537,11 @@
     <Folder Include="env\Lib\site-packages\pip\_vendor\urllib3\util\" />
     <Folder Include="env\Lib\site-packages\pip\__pycache__\" />
     <Folder Include="env\Scripts\" />
-    <Folder Include="app\" />
+    <Folder Include="HelloFlask\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="docker-compose.yml" />
+    <Content Include="Dockerfile" />
     <Content Include="env\.gitignore" />
     <Content Include="env\Lib\site-packages\pip-25.2.dist-info\entry_points.txt" />
     <Content Include="env\Lib\site-packages\pip-25.2.dist-info\licenses\AUTHORS.txt" />
@@ -675,6 +677,23 @@
     <Content Include="env\pyvenv.cfg" />
     <Content Include="env\Scripts\python.exe" />
     <Content Include="env\Scripts\pythonw.exe" />
+    <Content Include="HelloFlask\templates\addGame.html" />
+    <Content Include="HelloFlask\templates\addMatch.html" />
+    <Content Include="HelloFlask\templates\addMatch2.html" />
+    <Content Include="HelloFlask\templates\card.html" />
+    <Content Include="HelloFlask\templates\failedLogin.html" />
+    <Content Include="HelloFlask\templates\failedRegister.html" />
+    <Content Include="HelloFlask\templates\game.html" />
+    <Content Include="HelloFlask\templates\login.html" />
+    <Content Include="HelloFlask\templates\loginClaude.html" />
+    <Content Include="HelloFlask\templates\matches.html" />
+    <Content Include="HelloFlask\templates\modification.html" />
+    <Content Include="HelloFlask\templates\navBar.html" />
+    <Content Include="HelloFlask\templates\prediction.html" />
+    <Content Include="HelloFlask\templates\ranking.html" />
+    <Content Include="HelloFlask\templates\register.html" />
+    <Content Include="HelloFlask\templates\registerClaude.html" />
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

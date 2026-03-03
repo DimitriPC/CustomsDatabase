@@ -1,4 +1,5 @@
-﻿from HelloFlask import app, db
+﻿from flask_login.utils import _get_user
+from HelloFlask import app, db
 from flask import Flask, render_template, url_for, redirect, request, session
 from flask_bcrypt import bcrypt
 import sqlite3, json, os
@@ -11,6 +12,9 @@ from sqlalchemy.orm import joinedload
 from random import randint, choice
 from flask_login import login_user, login_required, logout_user, current_user
 import sys
+from .models import TeamSide
+from werkzeug.utils import secure_filename
+
 
 app.secret_key = "allo"
 
@@ -28,14 +32,14 @@ def login():
         # account does not exist
         if not user:
             return render_template(
-                "failedLogin.html",
+                "loginClaude.html",
                 message="Ce compte n'existe pas. Le username ou le mot de passe pourrait etre errone"
             )
 
         # account exists but no password
         if not user.password:
             return render_template(
-                "failedLogin.html",
+                "loginClaude.html",
                 message="Aucun mot de passe configure pour ce compte. Veuillez creer un compte"
             )
 
@@ -46,14 +50,14 @@ def login():
                 user.is_admin = True;
                 session["is_admin"] = user.is_admin
             next = request.args.get("next")
-            return redirect(next or url_for('prediction'))
+            return redirect(next or url_for('matches'))
 
         return render_template(
-            "failedLogin.html",
+            "loginClaude.html",
             message="Le mot de passe est incorrect pour ce compte"
         )
 
-    return render_template("login.html")
+    return render_template("loginClaude.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -61,6 +65,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"].encode("utf-8")
+        real_name = request.form["real_name"]
 
         user = User.query.filter_by(real_name=username).first()
 
@@ -70,7 +75,7 @@ def register():
             # If password already configured
             if user.password:
                 return render_template(
-                    "failedRegister.html",
+                    "registerClaude.html",
                     message="Ce compte existe deja. Veuillez vous connecter"
                 )
 
@@ -79,27 +84,29 @@ def register():
             hashed = bcrypt.hashpw(password, salt)
 
             user.password = hashed
+            user.real_name = real_name
             db.session.commit()
 
             login_user(user)
-            return redirect(url_for("prediction"))
+            return redirect(url_for("add_match"))
 
         # User does not exist → create new one
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password, salt).decode("utf-8")
 
         new_user = User(
-            real_name=username,
-            password=hashed
+            real_name=real_name,
+            password=hashed,
+            username=username
         )
 
         db.session.add(new_user)
         db.session.commit()
 
         login_user(new_user)
-        return redirect(url_for("prediction"))
+        return redirect(url_for("add_match"))
 
-    return render_template("register.html")
+    return render_template("registerClaude.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -109,12 +116,15 @@ def logout():
 @app.route('/matches', methods=['GET', 'POST'])
 @login_required
 def matches():
-    return "matches"
+    stmt = select(Match);
+    matches = db.session.scalars(stmt).all()
+    return render_template("matches.html", matches=matches)
         
 @app.route('/matches/<int:matchId>', methods=['GET', 'POST'])
 @login_required
-def match(matchId):
-        return "match"
+def games(matchId):
+    match = db.session.get(Match, matchId)
+    return render_template("game.html", match=match)
 
 @app.route('/ranking', methods=['GET', 'POST'])
 def ranking():
@@ -127,8 +137,162 @@ def modification(matchId):
         return "modification"
 
 #admin route
-@app.route('/addGame', methods=['GET', 'POST'])
+@app.route('/addGame/<int:matchId>', methods=['GET', 'POST'])
 @login_required
-def addGame():
-        return "addGame"
+def addGame(matchId):
+    match = db.session.get(Match, matchId)
 
+    if request.method == 'POST':
+
+        winner_side = request.form.get('winner') 
+        home_team_id = request.form.get('home_team_id')
+        away_team_id = request.form.get('away_team_id')
+        photo = request.files.get('photo')
+
+        if photo and photo.filename:
+            filename = secure_filename(photo.filename)
+    
+            match_folder = os.path.join('HelloFlask/static/uploads', str(match.match_id))
+            os.makedirs(match_folder, exist_ok=True)
+
+            save_path = os.path.join('HelloFlask/static/uploads', str(match.match_id), filename)
+            photo.save(save_path)
+
+            # store only "2/1234.jpg" in db
+            db_path = os.path.join(str(match.match_id), filename)
+        
+
+        new_game = Game(
+            first_to = request.form.get('first_to'),
+            r6_map = request.form.get('r6map'),
+            match_id = matchId,
+            home_team_id = home_team_id,
+            away_team_id = away_team_id,
+            score_home_team = request.form.get('score1'),
+            score_away_team = request.form.get('score2'),
+            photo_url = db_path
+        )
+        db.session.add(new_game)
+        db.session.commit()
+        return redirect(url_for('addGame', matchId=match.match_id))
+    
+    return render_template("addGame.html", match=match)
+
+@app.route('/add-match', methods=['GET', 'POST'])
+def add_match():
+    if request.method == 'POST':
+        # 1. Create the match
+        new_match = Match(
+            creator = current_user.user_id,
+            date_match = request.form.get('date_match'),
+            status     = request.form.get('status'),
+            first_to   = request.form.get('first_to'),
+        )
+        db.session.add(new_match)
+        db.session.flush()  # get new_match.match_id before committing
+
+        # 2. Create the two teams linked to this match
+        team1 = MatchTeam(match_id=new_match.match_id, side=TeamSide.HOME)
+        team2 = MatchTeam(match_id=new_match.match_id, side=TeamSide.AWAY)
+        db.session.add_all([team1, team2])
+        db.session.flush()  # get team IDs
+
+        # 3. Create participants for each team
+        for i in range(1, 6):
+            player_id = request.form.get(f'team1_player_{i}')
+            if player_id:
+                db.session.add(MatchParticipant(
+                    match_team_id=team1.match_team_id,
+                    user_id=int(player_id)
+                ))
+
+        for i in range(1, 6):
+            player_id = request.form.get(f'team2_player_{i}')
+            if player_id:
+                db.session.add(MatchParticipant(
+                    match_team_id=team2.match_team_id,
+                    user_id=int(player_id)
+                ))
+
+        db.session.commit()
+        return redirect(url_for('add_match'))  # or wherever
+
+    # GET — only players needed
+    players = User.query.order_by(User.username).all()
+    today   = datetime.now().date()
+    return render_template('addMatch2.html', players=players, today=today)
+
+@app.route('/enterStats/<int:gameId>', methods=['GET', 'POST'])
+def enter_stats(gameId):
+    game = db.session.get(Game, gameId)
+
+    if request.method == 'POST':
+        for i, participant in enumerate(game.home_team.participants, start=1):
+            kills    = request.form.get(f'home_{i}_kills')
+            assists  = request.form.get(f'home_{i}_assists')
+            deaths   = request.form.get(f'home_{i}_deaths')
+            score    = request.form.get(f'home_{i}_score')
+            position = request.form.get(f'home_{i}_position')
+
+            # check if stat already exists
+            stat = GameParticipantStats.query.filter_by(
+                match_participant_id=participant.match_participant_id,
+                game_id=gameId
+            ).first()
+
+            if stat:
+                # update existing
+                stat.kills    = int(kills)   if kills    else None
+                stat.assists  = int(assists) if assists  else None
+                stat.deaths   = int(deaths)  if deaths   else None
+                stat.score    = int(score)   if score    else None
+                stat.position = position     if position else None
+            else:
+                # create new
+                db.session.add(GameParticipantStats(
+                    match_participant_id = participant.match_participant_id,
+                    game_id  = gameId,
+                    kills    = int(kills)   if kills    else None,
+                    assists  = int(assists) if assists  else None,
+                    deaths   = int(deaths)  if deaths   else None,
+                    score    = int(score)   if score    else None,
+                    position = position     if position else None,
+                ))
+
+        # Away team participants
+        for i, participant in enumerate(game.away_team.participants, start=1):
+            kills    = request.form.get(f'away_{i}_kills')
+            assists  = request.form.get(f'away_{i}_assists')
+            deaths   = request.form.get(f'away_{i}_deaths')
+            score    = request.form.get(f'away_{i}_score')
+            position = request.form.get(f'away_{i}_position')
+
+            # check if stat already exists
+            stat = GameParticipantStats.query.filter_by(
+                match_participant_id=participant.match_participant_id,
+                game_id=gameId
+            ).first()
+
+            if stat:
+                # update existing
+                stat.kills    = int(kills)   if kills    else None
+                stat.assists  = int(assists) if assists  else None
+                stat.deaths   = int(deaths)  if deaths   else None
+                stat.score    = int(score)   if score    else None
+                stat.position = position     if position else None
+            else:
+                # create new
+                db.session.add(GameParticipantStats(
+                    match_participant_id = participant.match_participant_id,
+                    game_id  = gameId,
+                    kills    = int(kills)   if kills    else None,
+                    assists  = int(assists) if assists  else None,
+                    deaths   = int(deaths)  if deaths   else None,
+                    score    = int(score)   if score    else None,
+                    position = position     if position else None,
+                ))
+
+        db.session.commit()
+        return redirect(url_for('games', matchId=game.match_id))
+        
+    return render_template('gameStats.html', game=game)

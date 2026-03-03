@@ -9,7 +9,7 @@ from decimal import Decimal
 from datetime import date, time, datetime
 import os
 
-class User():
+class User(db.Model, UserMixin):
     __tablename__ = "user"
 
     user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -23,17 +23,20 @@ class User():
 
     player_match_participations: Mapped[List["MatchParticipant"]] = relationship(back_populates="user")
 
+    def get_id(self):
+        return str(self.user_id)
+
 class Result(IntEnum):
     win_reg = 3
     win_over = 2
     loss_over = 1
     loss_reg = 0
 
-class Match():
+class Match(db.Model):
     __tablename__ = "match"
 
     match_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    creator: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    creator: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=False)
     first_to: Mapped[int]
     date_match: Mapped[datetime | None]
     status: Mapped[str] #Ongoing or Completed    
@@ -45,13 +48,13 @@ class TeamSide(Enum):
     HOME = "home"
     AWAY = "away"
 
-class MatchTeam():
+class MatchTeam(db.Model):
     __tablename__ = "team"
 
     match_team_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     match_id: Mapped[int] = mapped_column(ForeignKey("match.match_id"), nullable=False)
     score: Mapped[int | None]
-    side: Mapped[TeamSide] 
+    side: Mapped[TeamSide]
 
     match: Mapped["Match"] = relationship(back_populates="match_teams")
 
@@ -62,7 +65,7 @@ class MatchTeam():
 
     participants: Mapped[List["MatchParticipant"]] = relationship(back_populates="match_team")
 
-class MatchParticipant():
+class MatchParticipant(db.Model):
     __tablename__ = "team_player"
 
     match_participant_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -73,12 +76,13 @@ class MatchParticipant():
     match_team: Mapped["MatchTeam"] = relationship(back_populates="participants")
     game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="match_participant")
     
-class Game():
+class Game(db.Model):
     __tablename__ = "game"
 
     game_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     first_to: Mapped[int]
     r6_map: Mapped[str]
+    photo_url: Mapped[str | None]
 
     match_id: Mapped[int] = mapped_column(ForeignKey("match.match_id"), nullable=False)
 
@@ -95,7 +99,19 @@ class Game():
     away_team: Mapped["MatchTeam"] = relationship(back_populates="away_games")
     game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="game")
 
-class GameParticipantStats():
+    home_team: Mapped["MatchTeam"] = relationship(
+                                    back_populates="home_games",
+                                    foreign_keys=[home_team_id]
+                                    )
+    away_team: Mapped["MatchTeam"] = relationship(
+                                    back_populates="away_games",
+                                    foreign_keys=[away_team_id]
+                                    )
+    winner: Mapped["MatchTeam"] = relationship(
+        foreign_keys=[winner_team_id]
+    )
+
+class GameParticipantStats(db.Model):
     __tablename__ = "game_participant_stats"
 
     participant_stats_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
