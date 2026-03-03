@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27203c2b-095a-4b3e-b7f3-8d5a4f1357e2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DB1.0.py</StartupFile>
+    <StartupFile>runserver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,7 +25,6 @@
     <Compile Include="HelloFlask\models.py" />
     <Compile Include="HelloFlask\routes.py" />
     <Compile Include="HelloFlask\__init__.py" />
-    <Compile Include="DB1.0.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\build_env.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\cache.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\cli\autocompletion.py" />
@@ -443,6 +442,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelloFlask\static\" />
+    <Folder Include="HelloFlask\static\uploads\" />
     <Folder Include="HelloFlask\templates\" />
     <Folder Include="env\" />
     <Folder Include="env\Include\" />
@@ -540,6 +540,7 @@
     <Folder Include="HelloFlask\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="aFaire.txt" />
     <Content Include="docker-compose.yml" />
     <Content Include="Dockerfile" />
     <Content Include="env\.gitignore" />
@@ -678,20 +679,13 @@
     <Content Include="env\Scripts\python.exe" />
     <Content Include="env\Scripts\pythonw.exe" />
     <Content Include="HelloFlask\templates\addGame.html" />
-    <Content Include="HelloFlask\templates\addMatch.html" />
     <Content Include="HelloFlask\templates\addMatch2.html" />
-    <Content Include="HelloFlask\templates\card.html" />
-    <Content Include="HelloFlask\templates\failedLogin.html" />
-    <Content Include="HelloFlask\templates\failedRegister.html" />
+    <Content Include="HelloFlask\templates\base.html" />
     <Content Include="HelloFlask\templates\game.html" />
-    <Content Include="HelloFlask\templates\login.html" />
+    <Content Include="HelloFlask\templates\gameStats.html" />
     <Content Include="HelloFlask\templates\loginClaude.html" />
     <Content Include="HelloFlask\templates\matches.html" />
-    <Content Include="HelloFlask\templates\modification.html" />
-    <Content Include="HelloFlask\templates\navBar.html" />
-    <Content Include="HelloFlask\templates\prediction.html" />
     <Content Include="HelloFlask\templates\ranking.html" />
-    <Content Include="HelloFlask\templates\register.html" />
     <Content Include="HelloFlask\templates\registerClaude.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>

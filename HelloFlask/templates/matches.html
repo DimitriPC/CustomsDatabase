@@ -1,61 +1,13 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matches</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --bg: #0d0f14;
-            --surface: #161a23;
-            --surface2: #1e2330;
-            --border: #2a3045;
-            --accent: #e8ff47;
-            --accent2: #ff4f6d;
-            --accent3: #47c2ff;
-            --text: #eef0f7;
-            --muted: #6b7394;
-            --radius: 16px;
-        }
+﻿{% extends "base.html" %}
+{% block title %}Matches{% endblock %}
+{% block styles %}
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
+
             padding: 40px 20px 80px;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
 
-            header h1 {
-                font-family: 'Bebas Neue', sans-serif;
-                font-size: clamp(3rem, 8vw, 6rem);
-                letter-spacing: 0.06em;
-                line-height: 1;
-                background: linear-gradient(135deg, var(--accent) 0%, #7fffb0 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-
-            header p {
-                color: var(--muted);
-                font-size: 0.95rem;
-                margin-top: 8px;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-            }
 
         .add-btn {
             display: inline-block;
@@ -318,113 +270,113 @@
             border: 1px dashed var(--border);
             border-radius: var(--radius);
         }
-    </style>
-</head>
-<body>
+{% endblock %}
+{% block content %}
+<header>
+    <h1>Matches</h1>
+    <p>All your games in one place</p>
+    <a href="{{ url_for('add_match') }}" class="add-btn">+ New Match</a>
+</header>
 
-    <header>
-        <h1>Matches</h1>
-        <p>All your games in one place</p>
-        <a href="{{ url_for('add_match') }}" class="add-btn">+ New Match</a>
-    </header>
+<div class="page">
 
-    <div class="page">
-
-        {# ── Ongoing ── #}
-        <div class="section ongoing">
-            <div class="section-title">
-                🟢 Ongoing
-                <span class="bar"></span>
-            </div>
-            <div class="match-grid">
-                {% set ongoing = matches | selectattr('status', 'equalto', 'ongoing') | list %}
-                {% if ongoing %}
-                {% for match in ongoing %}
-                <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
-                    <div class="match-top">
-                        <div>
-                            <div class="match-name">{{ match.name }}</div>
-                            <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
-                        </div>
-                        <span class="status-badge badge-ongoing">Live</span>
-                    </div>
-                    <div class="match-score">
-                        <div class="team-block">
-                            <span class="team-dot team1-dot"></span>
-                            <span class="team-name">
-                                {% for mt in match.match_teams if mt.side.value == 'home' %}
-                                Home
-                                {% endfor %}
-                            </span>
-                        </div>
-                        <div class="score-display">
-                            <span class="score-num tbd">—</span>
-                            <span class="score-sep">:</span>
-                            <span class="score-num tbd">—</span>
-                        </div>
-                        <div class="team-block right">
-                            <span class="team-dot team2-dot"></span>
-                            <span class="team-name">Away</span>
-                        </div>
-                    </div>
-                    <span class="arrow">›</span>
-                </a>
-                {% endfor %}
-                {% else %}
-                <div class="empty">No ongoing matches</div>
-                {% endif %}
-            </div>
+    {# ── Ongoing ── #}
+    <div class="section ongoing">
+        <div class="section-title">
+            🟢 Ongoing
+            <span class="bar"></span>
         </div>
-
-        {# ── Completed ── #}
-        <div class="section completed">
-            <div class="section-title">
-                ✅ Completed
-                <span class="bar"></span>
-            </div>
-            <div class="match-grid">
-                {% set completed = matches | selectattr('status', 'equalto', 'completed') | list %}
-                {% if completed %}
-                {% for match in completed %}
-
-                {# grab home and away teams #}
-                {% set home = match.match_teams | selectattr('side.value', 'equalto', 'home') | first | default(none) %}
-                {% set away = match.match_teams | selectattr('side.value', 'equalto', 'away') | first | default(none) %}
-                {% set home_score = home.score if home else 0 %}
-                {% set away_score = away.score if away else 0 %}
-
-                <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
-                    <div class="match-top">
-                        <div>
-                            <div class="match-name">{{ match.name }}</div>
-                            <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
-                        </div>
-                        <span class="status-badge badge-completed">Final</span>
+        <div class="match-grid">
+            {% set ongoing = matches | selectattr('status', 'equalto', 'ongoing') | list %}
+            {% if ongoing %}
+            {% for match in ongoing %}
+            <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
+                <div class="match-top">
+                    <div>
+                        <div class="match-name">{{ match.name }}</div>
+                        <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
-                    <div class="match-score">
-                        <div class="team-block">
-                            <span class="team-dot team1-dot"></span>
-                            <span class="team-name">Home</span>
-                        </div>
-                        <div class="score-display">
-                            <span class="score-num {{ 'winner' if home_score > away_score }}">{{ home_score }}</span>
-                            <span class="score-sep">:</span>
-                            <span class="score-num {{ 'winner' if away_score > home_score }}">{{ away_score }}</span>
-                        </div>
-                        <div class="team-block right">
-                            <span class="team-dot team2-dot"></span>
-                            <span class="team-name">Away</span>
-                        </div>
+                    <span class="status-badge badge-ongoing">Live</span>
+                </div>
+                <div class="match-score">
+                    <div class="team-block">
+                        <span class="team-dot team1-dot"></span>
+                        <span class="team-name">
+                            {% for mt in match.match_teams if mt.side.value == 'home' %}
+                            Home
+                            {% endfor %}
+                        </span>
                     </div>
-                    <span class="arrow">›</span>
-                </a>
-                {% endfor %}
-                {% else %}
-                <div class="empty">No completed matches</div>
-                {% endif %}
-            </div>
+                    <div class="score-display">
+                        <span class="score-num tbd">—</span>
+                        <span class="score-sep">:</span>
+                        <span class="score-num tbd">—</span>
+                    </div>
+                    <div class="team-block right">
+                        <span class="team-dot team2-dot"></span>
+                        <span class="team-name">Away</span>
+                    </div>
+                </div>
+                <span class="arrow">›</span>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="empty">No ongoing matches</div>
+            {% endif %}
         </div>
-
     </div>
-</body>
-</html>
+
+    {# ── Completed ── #}
+    <div class="section completed">
+        <div class="section-title">
+            ✅ Completed
+            <span class="bar"></span>
+        </div>
+        <div class="match-grid">
+            {% set completed = matches | selectattr('status', 'equalto', 'completed') | list %}
+            {% if completed %}
+            {% for match in completed %}
+
+            {# grab home and away teams #}
+            {% set home = match.match_teams | selectattr('side.value', 'equalto', 'home') | first | default(none) %}
+            {% set away = match.match_teams | selectattr('side.value', 'equalto', 'away') | first | default(none) %}
+            {% set home_score = home.score if home else 0 %}
+            {% set away_score = away.score if away else 0 %}
+
+            <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
+                <div class="match-top">
+                    <div>
+                        <div class="match-name">{{ match.name }}</div>
+                        <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
+                    </div>
+                    <span class="status-badge badge-completed">Final</span>
+                </div>
+                <div class="match-score">
+                    <div class="team-block">
+                        <span class="team-dot team1-dot"></span>
+                        <span class="team-name">Home</span>
+                    </div>
+                    <div class="score-display">
+                        <span class="score-num {{ 'winner' if home_score > away_score }}">{{ home_score }}</span>
+                        <span class="score-sep">:</span>
+                        <span class="score-num {{ 'winner' if away_score > home_score }}">{{ away_score }}</span>
+                    </div>
+                    <div class="team-block right">
+                        <span class="team-dot team2-dot"></span>
+                        <span class="team-name">Away</span>
+                    </div>
+                </div>
+                <span class="arrow">›</span>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="empty">No completed matches</div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+

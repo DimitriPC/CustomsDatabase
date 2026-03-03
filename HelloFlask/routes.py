@@ -108,10 +108,10 @@ def register():
 
     return render_template("registerClaude.html")
 
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=['GET', 'POST'])
 def logout():
     logout_user()
-    return "logged out"
+    return redirect(url_for('login'))
 
 @app.route('/matches', methods=['GET', 'POST'])
 @login_required
