@@ -11,9 +11,12 @@ from sqlalchemy import select, insert, func, Integer
 from sqlalchemy.orm import joinedload
 from random import randint, choice
 from flask_login import login_user, login_required, logout_user, current_user
+from trueskill import Rating, TrueSkill
 import sys
 from .models import TeamSide
 from werkzeug.utils import secure_filename
+from zoneinfo import ZoneInfo
+
 
 
 app.secret_key = "allo"
@@ -126,9 +129,7 @@ def games(matchId):
     match = db.session.get(Match, matchId)
     return render_template("game.html", match=match)
 
-@app.route('/ranking', methods=['GET', 'POST'])
-def ranking():
-    return "ranking"
+
 
 #admin route
 @app.route('/modification/<int:matchId>', methods=['GET', 'POST'])
@@ -147,6 +148,8 @@ def addGame(matchId):
         winner_side = request.form.get('winner') 
         home_team_id = request.form.get('home_team_id')
         away_team_id = request.form.get('away_team_id')
+        winner_team_id = home_team_id if (winner_side == "home") else away_team_id
+
         photo = request.files.get('photo')
 
         if photo and photo.filename:
@@ -161,6 +164,7 @@ def addGame(matchId):
             # store only "2/1234.jpg" in db
             db_path = os.path.join(str(match.match_id), filename)
         
+        
 
         new_game = Game(
             first_to = request.form.get('first_to'),
@@ -170,8 +174,14 @@ def addGame(matchId):
             away_team_id = away_team_id,
             score_home_team = request.form.get('score1'),
             score_away_team = request.form.get('score2'),
-            photo_url = db_path
+            photo_url = db_path,
+            winner_team_id = winner_team_id
         )
+
+        team_home_ids = [p.user_id for p in new_game.home_team.participants]
+        team_away_ids = [p.user_id for p in new_game.away_team.participants]
+        record_game(team_home_ids, team_away_ids, winner_team_id)
+
         db.session.add(new_game)
         db.session.commit()
         return redirect(url_for('addGame', matchId=match.match_id))
@@ -296,3 +306,42 @@ def enter_stats(gameId):
         return redirect(url_for('games', matchId=game.match_id))
         
     return render_template('gameStats.html', game=game)
+
+@app.route('/ranking', methods=['GET', 'POST'])
+def ranking():
+    users = db.session.execute(db.select(User)).scalars().all()
+
+    ranking = sorted(
+        [(user, 100 * (user.mu - 3 * user.sigma)) for user in users],   #100 factor added for clarity for users
+        key=lambda x: x[1],
+        reverse=True
+    )
+    return render_template("ranking.html", ranking=ranking, now=datetime.now(ZoneInfo('America/Montreal')))
+
+
+
+
+def record_game(team_home_ids, team_away_ids, winner):
+    env = TrueSkill(draw_probability=0)
+
+    # winner = "away" or "home"
+    team1 = User.query.filter(User.id.in_(team_home_ids)).all()
+    team2 = User.query.filter(User.id.in_(team_away_ids)).all()
+
+    t1_ratings = [env.create_rating(u.mu, u.sigma) for u in team1]
+    t2_ratings = [env.create_rating(u.mu, u.sigma) for u in team2]
+
+    ranks = [0, 1] if winner == "home" else [1, 0]
+    (new_t1, new_t2) = env.rate([t1_ratings, t2_ratings], ranks=ranks)
+
+    for user, new_rating in zip(team1, new_t1):
+        user.mu = new_rating.mu
+        user.sigma = new_rating.sigma
+        user.games += 1
+
+    for user, new_rating in zip(team2, new_t2):
+        user.mu = new_rating.mu
+        user.sigma = new_rating.sigma
+        user.games += 1
+
+    db.session.commit()

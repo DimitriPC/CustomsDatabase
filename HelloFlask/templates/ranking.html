@@ -1,7 +1,416 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% block title %}Rankings{% endblock %}
 {% block styles %}
+    :root {
+    --bg: #0a0b0d;
+    --surface: #111318;
+    --border: #1e2229;
+    --border-bright: #2a3040;
+    --gold: #c9a84c;
+    --gold-dim: #7a6230;
+    --silver: #8a95a8;
+    --bronze: #9c6b45;
+    --accent: #4a8fc1;
+    --accent-dim: #1e3d54;
+    --text: #d4dbe8;
+    --text-dim: #5a6478;
+    --text-muted: #3a4255;
+    --green: #3d9e6e;
+    --red: #c0392b;
+    --rank1: #c9a84c;
+    --rank2: #8a95a8;
+    --rank3: #9c6b45;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,143,193,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,143,193,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left {}
+
+  .header-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .header-title span {
+    color: var(--accent);
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .header-meta strong {
+    color: var(--text);
+  }
+
+  /* Top 3 podium */
+  .podium {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .podium-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .podium-card:nth-child(1) { animation-delay: 0.05s; }
+  .podium-card:nth-child(2) { animation-delay: 0.1s; }
+  .podium-card:nth-child(3) { animation-delay: 0.15s; }
+
+  .podium-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .podium-card.rank-1::before { background: var(--gold); }
+  .podium-card.rank-2::before { background: var(--silver); }
+  .podium-card.rank-3::before { background: var(--bronze); }
+
+  .podium-card.rank-1 {
+    border-color: var(--gold-dim);
+    background: linear-gradient(160deg, #161309 0%, var(--surface) 60%);
+  }
+
+  .podium-rank {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  .podium-card.rank-1 .podium-rank { color: var(--gold); }
+  .podium-card.rank-2 .podium-rank { color: var(--silver); }
+  .podium-card.rank-3 .podium-rank { color: var(--bronze); }
+
+  .podium-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .podium-rating {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .podium-card.rank-1 .podium-rating { color: var(--gold); }
+  .podium-card.rank-2 .podium-rating { color: var(--silver); }
+  .podium-card.rank-3 .podium-rating { color: var(--bronze); }
+
+  .podium-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .podium-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .podium-stat-label {
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .podium-stat-val {
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+  }
+
+  /* Table */
+  .table-header {
+    display: grid;
+    grid-template-columns: 48px 1fr 110px 110px 110px 80px;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+  }
+
+  .table-header span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .table-header span:not(:first-child) { text-align: right; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 48px 1fr 110px 110px 110px 80px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 4px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+
+  .row:hover {
+    border-color: var(--border-bright);
+    background: #13151c;
+  }
+
+  .row::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent-dim);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .row:hover::after { opacity: 1; }
+
+  .row:nth-child(1) { animation-delay: 0.2s; }
+  .row:nth-child(2) { animation-delay: 0.25s; }
+  .row:nth-child(3) { animation-delay: 0.3s; }
+  .row:nth-child(4) { animation-delay: 0.35s; }
+  .row:nth-child(5) { animation-delay: 0.4s; }
+  .row:nth-child(6) { animation-delay: 0.45s; }
+
+  .row-rank {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .row-name {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .row-rating {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    text-align: right;
+  }
+
+  .row-mu, .row-sigma {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  .row-games {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  /* Confidence bar */
+  .conf-bar-wrap {
+    position: absolute;
+    bottom: 0; left: 48px; right: 0;
+    height: 2px;
+    background: var(--border);
+  }
+
+  .conf-bar {
+    height: 100%;
+    background: var(--accent-dim);
+    transition: width 0.8s ease;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-formula {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .footer-formula span {
+    color: var(--accent);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .podium { grid-template-columns: 1fr; }
+    .table-header, .row { grid-template-columns: 40px 1fr 90px 70px; }
+    .table-header span:nth-child(4),
+    .table-header span:nth-child(5),
+    .row-mu, .row-sigma { display: none; }
+    .header-title { font-size: 30px; }
+  }
 {% endblock %}
 {% block content %}
+<div class="page">
+
+    <header class="header">
+        <div class="header-left">
+            <div class="header-label">// trueskill leaderboard</div>
+            <div class="header-title">Squad <span>Rankings</span></div>
+        </div>
+        <div class="header-meta">
+            <div>SEASON <strong>01</strong></div>
+            <div>PLAYERS <strong>{{ ranking|length }}</strong></div>
+            <div>UPDATED <strong>{{ now.strftime('%Y-%m-%d') }}</strong></div>  {# change to time of last game added #}
+        </div>
+    </header>
+
+    <div class="podium">
+        {% for user, rating in ranking[:3] %}
+        <div class="podium-card rank-{{ loop.index }}">
+            <div class="podium-rank">#{{ loop.index }} · {{ ['FIRST','SECOND','THIRD'][loop.index0] }}</div>
+            <div class="podium-name">{{ user.username }}</div>
+            <div class="podium-rating">{{ "%.2f"|format(rating) }}</div>
+            <div class="podium-stats">
+                <div class="podium-stat">
+                    <span class="podium-stat-label">MU</span>
+                    <span class="podium-stat-val">{{ "%.2f"|format(user.mu) }}</span>
+                </div>
+                <div class="podium-stat">
+                    <span class="podium-stat-label">SIGMA</span>
+                    <span class="podium-stat-val">{{ "%.2f"|format(user.sigma) }}</span>
+                </div>
+                <div class="podium-stat">
+                    <span class="podium-stat-label">GAMES</span>
+                    <span class="podium-stat-val">{{ user.games }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="table-header">
+        <span>#</span>
+        <span>Player</span>
+        <span>Rating</span>
+        <span>μ</span>
+        <span>σ</span>
+        <span>Games</span>
+    </div>
+
+    <div id="table">
+        {% for user, rating in ranking %}
+        <div class="row">
+            <div class="row-rank">{{ "%02d"|format(loop.index) }}</div>
+            <div class="row-name">{{ user.username }}</div>
+            <div class="row-rating">{{ "%.2f"|format(rating) }}</div>
+            <div class="row-mu">{{ "%.2f"|format(user.mu) }}</div>
+            <div class="row-sigma">{{ "%.2f"|format(user.sigma) }}</div>
+            <div class="row-games">{{ user.games }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-note">R6 SIEGE · TRUESKILL RATING SYSTEM · DRAW_PROBABILITY=0</div>
+        <div class="footer-formula">RATING = <span>μ − 3σ</span></div>
+    </footer>
+
+</div>
 {% endblock %}
