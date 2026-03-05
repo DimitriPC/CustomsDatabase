@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27203c2b-095a-4b3e-b7f3-8d5a4f1357e2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>runserver.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -427,6 +428,8 @@
     <Compile Include="env\Lib\site-packages\pip\__init__.py" />
     <Compile Include="env\Lib\site-packages\pip\__main__.py" />
     <Compile Include="env\Lib\site-packages\pip\__pip-runner__.py" />
+    <Compile Include="migrations\env.py" />
+    <Compile Include="ocr.py" />
     <Compile Include="runserver.py" />
   </ItemGroup>
   <ItemGroup>
@@ -443,6 +446,7 @@
   <ItemGroup>
     <Folder Include="HelloFlask\static\" />
     <Folder Include="HelloFlask\static\uploads\" />
+    <Folder Include="HelloFlask\static\uploads\2\" />
     <Folder Include="HelloFlask\templates\" />
     <Folder Include="env\" />
     <Folder Include="env\Include\" />
@@ -538,8 +542,13 @@
     <Folder Include="env\Lib\site-packages\pip\__pycache__\" />
     <Folder Include="env\Scripts\" />
     <Folder Include="HelloFlask\" />
+    <Folder Include="migrations\" />
+    <Folder Include="migrations\versions\" />
+    <Folder Include="migrations\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
+    <Content Include=".env.exemple" />
     <Content Include="aFaire.txt" />
     <Content Include="docker-compose.yml" />
     <Content Include="Dockerfile" />
@@ -678,6 +687,10 @@
     <Content Include="env\pyvenv.cfg" />
     <Content Include="env\Scripts\python.exe" />
     <Content Include="env\Scripts\pythonw.exe" />
+    <Content Include="HelloFlask\static\uploads\2\134054678217081009.jpg" />
+    <Content Include="HelloFlask\static\uploads\2\inverted.jpg" />
+    <Content Include="HelloFlask\static\uploads\2\rankingCropped.jpeg" />
+    <Content Include="HelloFlask\static\uploads\2\rankingr6.jpeg" />
     <Content Include="HelloFlask\templates\addGame.html" />
     <Content Include="HelloFlask\templates\addMatch2.html" />
     <Content Include="HelloFlask\templates\base.html" />
@@ -687,6 +700,10 @@
     <Content Include="HelloFlask\templates\matches.html" />
     <Content Include="HelloFlask\templates\ranking.html" />
     <Content Include="HelloFlask\templates\registerClaude.html" />
+    <Content Include="migrations\alembic.ini" />
+    <Content Include="migrations\README" />
+    <Content Include="migrations\script.py.mako" />
+    <Content Include="migrations\__pycache__\env.cpython-312.pyc" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

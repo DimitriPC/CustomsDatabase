@@ -15,9 +15,10 @@ class User(db.Model, UserMixin):
     user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(unique=True, nullable=False)
     real_name: Mapped[str] = mapped_column(unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(db.String(60), nullable=False)
+    password: Mapped[str] = mapped_column(db.String(60), nullable=True)
     is_admin: Mapped[bool] = mapped_column(default=False)
-    elo_rating: Mapped[int | None]
+    mu: Mapped[float] = mapped_column(default=25.0)
+    sigma: Mapped[float] = mapped_column(default=8.333)
     wins: Mapped[int | None]
     losses: Mapped[int | None]
 
