@@ -26,41 +26,41 @@ app.secret_key = "allo"
 @app.route('/login', methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
+        name = request.form["name"]
         enteredPassword = request.form["password"].encode("utf-8")
 
-        stmt = select(User).where(User.username == username)
+        stmt = select(User).where(User.real_name == name)
         user = db.session.scalars(stmt).first()
 
         # account does not exist
         if not user:
             return render_template(
-                "loginClaude.html",
+                "login.html",
                 message="Ce compte n'existe pas. Le username ou le mot de passe pourrait etre errone"
             )
 
         # account exists but no password
         if not user.password:
             return render_template(
-                "loginClaude.html",
+                "login.html",
                 message="Aucun mot de passe configure pour ce compte. Veuillez creer un compte"
             )
 
         # check password
         if bcrypt.checkpw(enteredPassword, user.password.encode("utf-8")):
             login_user(user)
-            if (user.username == "Dimipc"):
+            if (user.real_name == "Dimi"):
                 user.is_admin = True;
                 session["is_admin"] = user.is_admin
             next = request.args.get("next")
             return redirect(next or url_for('matches'))
 
         return render_template(
-            "loginClaude.html",
+            "login.html",
             message="Le mot de passe est incorrect pour ce compte"
         )
 
-    return render_template("loginClaude.html")
+    return render_template("login.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -78,7 +78,7 @@ def register():
             # If password already configured
             if user.password:
                 return render_template(
-                    "registerClaude.html",
+                    "register.html",
                     message="Ce compte existe deja. Veuillez vous connecter"
                 )
 
@@ -107,9 +107,9 @@ def register():
         db.session.commit()
 
         login_user(new_user)
-        return redirect(url_for("add_match"))
+        return redirect(url_for("matches"))
 
-    return render_template("registerClaude.html")
+    return render_template("register.html")
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
