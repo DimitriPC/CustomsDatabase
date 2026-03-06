@@ -43,7 +43,7 @@ class Match(db.Model):
     status: Mapped[str] #Ongoing or Completed    
 
     match_teams: Mapped[List["MatchTeam"]] = relationship(back_populates="match")
-    games: Mapped[List["Game"]] = relationship(back_populates="match")
+    games: Mapped[List["Game"]] = relationship('Game', cascade='all, delete-orphan', back_populates="match")
 
 class TeamSide(Enum):
     HOME = "home"
@@ -64,18 +64,9 @@ class MatchTeam(db.Model):
     away_games: Mapped[List["Game"]] = relationship(back_populates="away_team",
                                         foreign_keys="[Game.away_team_id]")
 
-    participants: Mapped[List["MatchParticipant"]] = relationship(back_populates="match_team")
+    participants: Mapped[List["MatchParticipant"]] = relationship(cascade='all, delete-orphan', back_populates="match_team")
 
-class MatchParticipant(db.Model):
-    __tablename__ = "team_player"
 
-    match_participant_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    match_team_id: Mapped[int] = mapped_column(ForeignKey("team.match_team_id"), nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=False)
-
-    user: Mapped["User"] = relationship(back_populates="player_match_participations")
-    match_team: Mapped["MatchTeam"] = relationship(back_populates="participants")
-    game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="match_participant")
     
 class Game(db.Model):
     __tablename__ = "game"
@@ -102,15 +93,28 @@ class Game(db.Model):
 
     home_team: Mapped["MatchTeam"] = relationship(
                                     back_populates="home_games",
+                                    cascade='all, delete-orphan',
                                     foreign_keys=[home_team_id]
                                     )
     away_team: Mapped["MatchTeam"] = relationship(
                                     back_populates="away_games",
+                                    cascade='all, delete-orphan',
                                     foreign_keys=[away_team_id]
                                     )
     winner: Mapped["MatchTeam"] = relationship(
         foreign_keys=[winner_team_id]
     )
+
+class MatchParticipant(db.Model):
+    __tablename__ = "team_player"
+
+    match_participant_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    match_team_id: Mapped[int] = mapped_column(ForeignKey("team.match_team_id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=False)
+
+    user: Mapped["User"] = relationship(back_populates="player_match_participations")
+    match_team: Mapped["MatchTeam"] = relationship(back_populates="participants")
+    game_stats: Mapped[List["GameParticipantStats"]] = relationship(cascade='all, delete-orphan', back_populates="match_participant")
 
 class GameParticipantStats(db.Model):
     __tablename__ = "game_participant_stats"
