@@ -357,9 +357,9 @@
                         <span class="team-name">Home</span>
                     </div>
                     <div class="score-display">
-                        <span class="score-num {{ 'winner' if home_score > away_score }}">{{ home_score }}</span>
+                        <span class="score-num {{ 'winner' if (home_score or 0) > (away_score or 0) }}">{{ home_score }}</span>
                         <span class="score-sep">:</span>
-                        <span class="score-num {{ 'winner' if away_score > home_score }}">{{ away_score }}</span>
+                        <span class="score-num {{ 'winner' if (away_score or 0) > (home_score or 0) }}">{{ away_score }}</span>
                     </div>
                     <div class="team-block right">
                         <span class="team-dot team2-dot"></span>
