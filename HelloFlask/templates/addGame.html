@@ -2,153 +2,166 @@
 {% block title %}Add Game{% endblock %}
 
 {% block styles %}
+    .game-photo-wrap {
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 36px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+    }
+
+    .game-photo-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
 {% endblock %}
 
 {% block content %}
-    <form method="POST" enctype="multipart/form-data">
-        <header>
-            <h1>Match Entry</h1>
-            <p>Fill in the details below</p>
-        </header>
+<form method="POST" enctype="multipart/form-data">
+    <header>
+        <h1>Match Entry</h1>
+        <p>Fill in the details below</p>
+    </header>
 
-        <div class="grid">
+    <div class="grid">
 
-            <!-- 1. Photo -->
-            <div class="card">
-                <div class="card-label">
-                    Photo
-                </div>
-                <div class="photo-drop" id="photoDrop">
-                    <input type="file" name="photo" accept="image/*" id="photoInput">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                    <span>Click or drag to upload a photo</span>
-                </div>
-                <img id="photoPreview" alt="Preview">
-                <p id="photoName"></p>
+        <!-- 1. Photo -->
+        <div class="card">
+            <div class="card-label">
+                Photo
             </div>
-
-            <!-- Team side assignement -->>
-            <div class="card">
-                <div class="card-label">Team Sides</div>
-                <div class="score-row">
-                    <div class="team-block">
-                        <span class="team-name">Home</span>
-                        <select name="home_team_id" class="score-input">
-                            {% for team in match.match_teams %}
-                            <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username if team.participants else 'No players' }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <span class="vs">VS</span>
-                    <div class="team-block">
-                        <span class="team-name">Away</span>
-                        <select name="away_team_id" class="score-input">
-                            {% for team in match.match_teams %}
-                            <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+            <div class="photo-drop" id="photoDrop">
+                <input type="file" name="photo" accept="image/*" id="photoInput">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                <span>Click or drag to upload a photo</span>
             </div>
-
-            <!-- 2. Time -->
-            <div class="card">
-                <div class="card-label">
-                    Match Time
-                </div>
-                <input type="time" id="matchTime">
-            </div>
-
-
-
-            <!-- 4. First to number -->
-            <div class="card">
-                <div class="card-label">
-                    First To
-                </div>
-                <div class="firstto-row">
-                    <input type="number" name="first_to" id="firstTo" min="1" max="999" placeholder="4">
-                    <span class="firstto-label">rounds</span>
-                </div>
-            </div>
-
-            <!-- 5. Score -->
-            <div class="card">
-                <div class="card-label">
-                    <span class="icon">⚽</span> Score
-                </div>
-                <div class="score-row">
-                    <div class="team-block">
-                        <span class="team-name">Team 1</span>
-                        <input type="number" name="score1" class="score-input" id="score1" min="0" placeholder="0">
-                    </div>
-                    <span class="vs">VS</span>
-                    <div class="team-block">
-                        <span class="team-name">Team 2</span>
-                        <input type="number" name="score2" class="score-input" id="score2" min="0" placeholder="0">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. Winner -->
-            <div class="card">
-                <div class="card-label">Winner</div>
-                <div class="toggle-group">
-                    <input type="radio" name="winner" id="winner_home" value="home" checked>
-                    <label for="winner_home">🏠 Home</label>
-
-                    <input type="radio" name="winner" id="winner_away" value="away">
-                    <label for="winner_away">✈️ Away</label>
-                </div>
-            </div>
-
-            <!-- 7. Win Type -->
-            <div class="card">
-                <div class="card-label">Win Type</div>
-                <div class="toggle-group">
-                    <input type="radio" name="win_type" id="regular" value="regular" checked>
-                    <label for="regular">Regular</label>
-
-                    <input type="radio" name="win_type" id="overtime" value="overtime">
-                    <label for="overtime">Overtime</label>
-                </div>
-            </div>
-
-            <!-- 8. Rainbow Six Map -->
-            <div class="card">
-                <div class="card-label">
-                    R6 Map
-                </div>
-                <input type="text" name="r6map" id="r6map" placeholder="e.g. Bank, Clubhouse, Oregon…">
-            </div>
-
+            <img id="photoPreview" alt="Preview">
+            <p id="photoName"></p>
         </div>
 
-        <button class="submit-btn">Save Game</button>
-    </form>
+        <!-- Team side assignement -->>
+        <div class="card">
+            <div class="card-label">Team Sides</div>
+            <div class="score-row">
+                <div class="team-block">
+                    <span class="team-name">Home</span>
+                    <select name="home_team_id" class="score-input">
+                        {% for team in match.match_teams %}
+                        <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username if team.participants else 'No players' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <span class="vs">VS</span>
+                <div class="team-block">
+                    <span class="team-name">Away</span>
+                    <select name="away_team_id" class="score-input">
+                        {% for team in match.match_teams %}
+                        <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Time -->
+        <div class="card">
+            <div class="card-label">
+                Match Time
+            </div>
+            <input type="time" id="matchTime">
+        </div>
 
 
-    <script>
-        // Photo preview
-        document.getElementById('photoInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-        const img = document.getElementById('photoPreview');
-        const name = document.getElementById('photoName');
-        const drop = document.getElementById('photoDrop');
-        img.src = ev.target.result;
-        img.style.display = 'block';
-        name.textContent = file.name;
-        name.style.display = 'block';
-        drop.style.minHeight = '0';
-        drop.querySelector('svg').style.display = 'none';
-        drop.querySelector('span').style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-        });
+
+        <!-- 4. First to number -->
+        <div class="card">
+            <div class="card-label">
+                First To
+            </div>
+            <div class="firstto-row">
+                <input type="number" name="first_to" id="firstTo" min="1" max="999" placeholder="4">
+                <span class="firstto-label">rounds</span>
+            </div>
+        </div>
+
+        <!-- 5. Score -->
+        <div class="card">
+            <div class="card-label">
+                <span class="icon">⚽</span> Score
+            </div>
+            <div class="score-row">
+                <div class="team-block">
+                    <span class="team-name">Team 1</span>
+                    <input type="number" name="score1" class="score-input" id="score1" min="0" placeholder="0">
+                </div>
+                <span class="vs">VS</span>
+                <div class="team-block">
+                    <span class="team-name">Team 2</span>
+                    <input type="number" name="score2" class="score-input" id="score2" min="0" placeholder="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Winner -->
+        <div class="card">
+            <div class="card-label">Winner</div>
+            <div class="toggle-group">
+                <input type="radio" name="winner" id="winner_home" value="home" checked>
+                <label for="winner_home">🏠 Home</label>
+
+                <input type="radio" name="winner" id="winner_away" value="away">
+                <label for="winner_away">✈️ Away</label>
+            </div>
+        </div>
+
+        <!-- 7. Win Type -->
+        <div class="card">
+            <div class="card-label">Win Type</div>
+            <div class="toggle-group">
+                <input type="radio" name="win_type" id="regular" value="regular" checked>
+                <label for="regular">Regular</label>
+
+                <input type="radio" name="win_type" id="overtime" value="overtime">
+                <label for="overtime">Overtime</label>
+            </div>
+        </div>
+
+        <!-- 8. Rainbow Six Map -->
+        <div class="card">
+            <div class="card-label">
+                R6 Map
+            </div>
+            <input type="text" name="r6map" id="r6map" placeholder="e.g. Bank, Clubhouse, Oregon…">
+        </div>
+
+    </div>
+
+    <button class="submit-btn">Save Game</button>
+</form>
 
 
-    </script>
+<script>
+    // Photo preview
+    document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+    const img = document.getElementById('photoPreview');
+    const name = document.getElementById('photoName');
+    const drop = document.getElementById('photoDrop');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    name.textContent = file.name;
+    name.style.display = 'block';
+    drop.style.minHeight = '0';
+    drop.querySelector('svg').style.display = 'none';
+    drop.querySelector('span').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+    });
+
+
+</script>
 {% endblock %}
