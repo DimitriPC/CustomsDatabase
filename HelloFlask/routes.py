@@ -327,8 +327,8 @@ def record_game(team_home_ids, team_away_ids, winner):
     env = TrueSkill(draw_probability=0)
 
     # winner = "away" or "home"
-    team1 = User.query.filter(User.id.in_(team_home_ids)).all()
-    team2 = User.query.filter(User.id.in_(team_away_ids)).all()
+    team1 = User.query.filter(User.user_id.in_(team_home_ids)).all()
+    team2 = User.query.filter(User.user_id.in_(team_away_ids)).all()
 
     t1_ratings = [env.create_rating(u.mu, u.sigma) for u in team1]
     t2_ratings = [env.create_rating(u.mu, u.sigma) for u in team2]
