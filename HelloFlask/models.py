@@ -93,12 +93,10 @@ class Game(db.Model):
 
     home_team: Mapped["MatchTeam"] = relationship(
                                     back_populates="home_games",
-                                    cascade='all, delete-orphan',
                                     foreign_keys=[home_team_id]
                                     )
     away_team: Mapped["MatchTeam"] = relationship(
                                     back_populates="away_games",
-                                    cascade='all, delete-orphan',
                                     foreign_keys=[away_team_id]
                                     )
     winner: Mapped["MatchTeam"] = relationship(
@@ -114,7 +112,7 @@ class MatchParticipant(db.Model):
 
     user: Mapped["User"] = relationship(back_populates="player_match_participations")
     match_team: Mapped["MatchTeam"] = relationship(back_populates="participants")
-    game_stats: Mapped[List["GameParticipantStats"]] = relationship(cascade='all, delete-orphan', back_populates="match_participant")
+    game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="match_participant")
 
 class GameParticipantStats(db.Model):
     __tablename__ = "game_participant_stats"
