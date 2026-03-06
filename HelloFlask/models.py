@@ -42,8 +42,8 @@ class Match(db.Model):
     date_match: Mapped[datetime | None]
     status: Mapped[str] #Ongoing or Completed    
 
-    match_teams: Mapped[List["MatchTeam"]] = relationship(back_populates="match")
-    games: Mapped[List["Game"]] = relationship('Game', cascade='all, delete-orphan', back_populates="match")
+    match_teams: Mapped[List["MatchTeam"]] = relationship(back_populates="match", cascade='all, delete-orphan')
+    games: Mapped[List["Game"]] = relationship(cascade='all, delete-orphan', back_populates="match")
 
 class TeamSide(Enum):
     HOME = "home"
@@ -87,9 +87,7 @@ class Game(db.Model):
     winner_team_id: Mapped[int] = mapped_column(ForeignKey("team.match_team_id"), nullable=True)
 
     match: Mapped["Match"] = relationship(back_populates="games")
-    home_team: Mapped["MatchTeam"] = relationship(back_populates="home_games")
-    away_team: Mapped["MatchTeam"] = relationship(back_populates="away_games")
-    game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="game")
+    game_stats: Mapped[List["GameParticipantStats"]] = relationship(cascade='all, delete-orphan', back_populates="game")
 
     home_team: Mapped["MatchTeam"] = relationship(
                                     back_populates="home_games",
@@ -112,7 +110,7 @@ class MatchParticipant(db.Model):
 
     user: Mapped["User"] = relationship(back_populates="player_match_participations")
     match_team: Mapped["MatchTeam"] = relationship(back_populates="participants")
-    game_stats: Mapped[List["GameParticipantStats"]] = relationship(back_populates="match_participant")
+    game_stats: Mapped[List["GameParticipantStats"]] = relationship(cascade='all, delete-orphan', back_populates="match_participant")
 
 class GameParticipantStats(db.Model):
     __tablename__ = "game_participant_stats"
