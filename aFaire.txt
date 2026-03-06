@@ -1,1 +1,2 @@
 1. Remove picture selection add game
+2. Remove option for completed game. Change it to matches/matchId bottom page

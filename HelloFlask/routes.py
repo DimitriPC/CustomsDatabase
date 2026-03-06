@@ -178,12 +178,14 @@ def addGame(matchId):
             winner_team_id = winner_team_id
         )
 
+        db.session.add(new_game)
+        db.session.commit()
+        db.session.refresh(new_game)
+
         team_home_ids = [p.user_id for p in new_game.home_team.participants]
         team_away_ids = [p.user_id for p in new_game.away_team.participants]
         record_game(team_home_ids, team_away_ids, winner_team_id)
 
-        db.session.add(new_game)
-        db.session.commit()
         return redirect(url_for('addGame', matchId=match.match_id))
     
     return render_template("addGame.html", match=match)
