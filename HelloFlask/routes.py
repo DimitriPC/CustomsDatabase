@@ -339,11 +339,11 @@ def record_game(team_home_ids, team_away_ids, winner):
     for user, new_rating in zip(team1, new_t1):
         user.mu = new_rating.mu
         user.sigma = new_rating.sigma
-        user.games += 1
+        user.games = (user.games or 0) + 1
 
     for user, new_rating in zip(team2, new_t2):
         user.mu = new_rating.mu
         user.sigma = new_rating.sigma
-        user.games += 1
+        user.games = (user.games or 0) + 1
 
     db.session.commit()
