@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     is_admin: Mapped[bool] = mapped_column(default=False)
     mu: Mapped[float] = mapped_column(server_default='25.0')
     sigma: Mapped[float] = mapped_column(server_default='8.333')
-    games: Mapped[int | None]
+    games: Mapped[int | None] = mapped_column(server_default='0')
     wins: Mapped[int | None]
     losses: Mapped[int | None]
 
