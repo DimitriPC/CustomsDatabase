@@ -347,3 +347,7 @@ def record_game(team_home_ids, team_away_ids, winner):
         user.games = (user.games or 0) + 1
 
     db.session.commit()
+
+@app.route('/match/<int:match_id>/edit', methods=['GET', 'POST'])
+def edit_match(match_id):
+    return "success"

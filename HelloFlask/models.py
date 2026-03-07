@@ -55,7 +55,7 @@ class MatchTeam(db.Model):
 
     match_team_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     match_id: Mapped[int] = mapped_column(ForeignKey("match.match_id"), nullable=False)
-    score: Mapped[int | None]
+    score: Mapped[int] = mapped_column(server_default='0')
     side: Mapped[TeamSide]
 
     match: Mapped["Match"] = relationship(back_populates="match_teams")

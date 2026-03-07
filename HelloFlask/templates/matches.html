@@ -81,6 +81,8 @@
             overflow: hidden;
             transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
             animation: fadeUp 0.4s ease both;
+            cursor: pointer;
+
         }
 
             .match-card:hover {
@@ -270,6 +272,23 @@
             border: 1px dashed var(--border);
             border-radius: var(--radius);
         }
+    .edit-btn {
+        position: absolute;
+        top: 12px;
+        right: 44px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.85rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: color 0.15s, background 0.15s;
+        z-index: 1;
+    }
+
+    .edit-btn:hover {
+        color: var(--accent);
+        background: rgba(232,255,71,0.08);
+    }
 {% endblock %}
 {% block content %}
 <header>
@@ -318,6 +337,20 @@
                     </div>
                 </div>
                 <span class="arrow">›</span>
+                <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
+                    <div class="match-top">
+                        ...
+                    </div>
+                    <div class="match-score">
+                        ...
+                    </div>
+                    <span class="arrow">›</span>
+                    <a href="{{ url_for('edit_match', match_id=match.match_id) }}"
+                       class="edit-btn"
+                       onclick="event.stopPropagation()">
+                        ✏️
+                    </a>
+                </div>
             </a>
             {% endfor %}
             {% else %}
