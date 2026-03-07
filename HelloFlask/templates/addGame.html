@@ -46,7 +46,8 @@
             <div class="score-row">
                 <div class="team-block">
                     <span class="team-name">Home</span>
-                    <select name="home_team_id" class="score-input">
+                    <select name="home_team_id" class="score-input" required>
+                        <option value="">— Select —</option>
                         {% for team in match.match_teams %}
                         <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username if team.participants else 'No players' }}</option>
                         {% endfor %}
@@ -55,7 +56,8 @@
                 <span class="vs">VS</span>
                 <div class="team-block">
                     <span class="team-name">Away</span>
-                    <select name="away_team_id" class="score-input">
+                    <select name="away_team_id" class="score-input" required>
+                        <option value="">— Select —</option>
                         {% for team in match.match_teams %}
                         <option value="{{ team.match_team_id }}">Team {{ team.participants[0].user.username }}</option>
                         {% endfor %}
@@ -162,6 +164,25 @@
     reader.readAsDataURL(file);
     });
 
+    //Home/Away selector
+    const home = document.querySelector('select[name="home_team_id"]');
+    const away = document.querySelector('select[name="away_team_id"]');
 
+    function syncSelects() {
+    // re-enable all options in both
+    [...home.options, ...away.options].forEach(o => o.disabled = false);
+
+    // disable selected value of home in away and vice versa
+    if (home.value) {
+    away.querySelector(`option[value="${home.value}"]`).disabled = true;
+    }
+    if (away.value) {
+    home.querySelector(`option[value="${away.value}"]`).disabled = true;
+    }
+    }
+
+    home.addEventListener('change', syncSelects);
+    away.addEventListener('change', syncSelects);
+    syncSelects(); // run on page load
 </script>
 {% endblock %}

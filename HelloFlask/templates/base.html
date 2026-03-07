@@ -582,6 +582,10 @@
                class="nav-link {{ 'active' if request.endpoint == 'matches' }}">
                 Matches
             </a>
+            <a href="{{ url_for('ranking') }}"
+               class="nav-link {{ 'active' if request.endpoint == 'ranking' }}">
+                Ranking
+            </a>
             {% if current_user.is_admin %}
             <a href="{{ url_for('add_match') }}"
                class="nav-link {{ 'active' if request.endpoint == 'add_match' }}">

@@ -699,7 +699,7 @@
     <Content Include="HelloFlask\templates\login.html" />
     <Content Include="HelloFlask\templates\matches.html" />
     <Content Include="HelloFlask\templates\ranking.html" />
-    <Content Include="HelloFlask\templates\registerClaude.html" />
+    <Content Include="HelloFlask\templates\register.html" />
     <Content Include="migrations\alembic.ini" />
     <Content Include="migrations\README" />
     <Content Include="migrations\script.py.mako" />
