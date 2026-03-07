@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from HelloFlask.models import User, Match, MatchParticipant, MatchTeam, GameParticipantStats, Game
 
 
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, render_as_batch=False)
 
 with app.app_context():
     db.create_all()

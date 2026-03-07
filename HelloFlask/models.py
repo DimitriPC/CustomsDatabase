@@ -41,7 +41,8 @@ class Match(db.Model):
     creator: Mapped[int] = mapped_column(ForeignKey("user.user_id"), nullable=False)
     first_to: Mapped[int]
     date_match: Mapped[datetime | None]
-    status: Mapped[str] #Ongoing or Completed    
+    status: Mapped[str] #Ongoing or Completed 
+    description: Mapped[str | None]
 
     match_teams: Mapped[List["MatchTeam"]] = relationship(back_populates="match", cascade='all, delete-orphan')
     games: Mapped[List["Game"]] = relationship(cascade='all, delete-orphan', back_populates="match")
