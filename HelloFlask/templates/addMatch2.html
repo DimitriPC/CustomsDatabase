@@ -223,7 +223,7 @@ input:focus {
                         <span class="slot-label">Player {{ slot }}</span>
                         <select name="team{{ team_num }}_player_{{ slot }}" class="player-select">
                             <option value="">— Select —</option>
-                            {% for player in players | sort(attribute='username'%}
+                            {% for player in players | sort(attribute='username') %}
                             <option value="{{ player.user_id }}">{{ player.username }}</option>
                             {% endfor %}
                         </select>
