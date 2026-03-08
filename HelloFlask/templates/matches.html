@@ -186,10 +186,7 @@
             flex: 1;
         }
 
-            .team-block.right {
-                flex-direction: row-reverse;
-                text-align: right;
-            }
+            
 
         .team-dot {
             width: 7px;
@@ -312,7 +309,9 @@
             <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
                 <div class="match-top">
                     <div>
+                        {% if match.description %}
                         <div class="match-name">{{ match.description }}</div>
+                        {% endif %}
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
                 </div>
@@ -322,7 +321,7 @@
                         <span class="team-name"> Team {{  match.match_teams[0].participants[0].user.username  }} </span>
                     </div>
                     <div class="score-display">
-                        <span class="score-num tbd">-</span>
+                        <span class="score-num tbd">—</span>
                         <span class="score-sep">:</span>
                         <span class="score-num tbd">—</span>
                     </div>
