@@ -309,22 +309,17 @@
             {% set ongoing = matches | selectattr('status', 'equalto', 'ongoing') | list %}
             {% if ongoing %}
             {% for match in ongoing %}
-            <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
+            <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
                 <div class="match-top">
                     <div>
-                        <div class="match-name">{{ match.name }}</div>
+                        <div class="match-name">{{ match.status }}</div>
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
-                    <span class="status-badge badge-ongoing">Live</span>
                 </div>
                 <div class="match-score">
                     <div class="team-block">
                         <span class="team-dot team1-dot"></span>
-                        <span class="team-name">
-                            {% for mt in match.match_teams if mt.side.value == 'home' %}
-                            Home
-                            {% endfor %}
-                        </span>
+                        <span class="team-name">Home</span>
                     </div>
                     <div class="score-display">
                         <span class="score-num tbd">—</span>
@@ -337,21 +332,12 @@
                     </div>
                 </div>
                 <span class="arrow">›</span>
-                <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
-                    <div class="match-top">
-                        ...
-                    </div>
-                    <div class="match-score">
-                        ...
-                    </div>
-                    <span class="arrow">›</span>
-                    <a href="{{ url_for('edit_match', match_id=match.match_id) }}"
-                       class="edit-btn"
-                       onclick="event.stopPropagation()">
-                        ✏️
-                    </a>
-                </div>
-            </a>
+                <a href="{{ url_for('edit_match', match_id=match.match_id) }}"
+                   class="edit-btn"
+                   onclick="event.stopPropagation()">
+                    ✏️
+                </a>
+            </div>
             {% endfor %}
             {% else %}
             <div class="empty">No ongoing matches</div>
@@ -379,7 +365,7 @@
             <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
                 <div class="match-top">
                     <div>
-                        <div class="match-name">{{ match.name }}</div>
+                        <div class="match-name">{{ match.status }}</div>
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
                     <span class="status-badge badge-completed">Final</span>

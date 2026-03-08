@@ -395,10 +395,10 @@ header {
     <div class="score-banner">
         <div class="banner-team">
             <span class="banner-team-label">Home</span>
-            <span class="banner-team-name">Team 1</span>
+            <span class="banner-team-name">Team {{ home.participants[0].user.username }}</span>
         </div>
         <div class="banner-score">
-            {% if match.status == 'completed' %}
+            
             <span class="banner-score-num {{ 'winner' if home and away and home.score > away.score }}">
                 {{ home.score if home and home.score is not none else 0 }}
             </span>
@@ -406,15 +406,10 @@ header {
             <span class="banner-score-num {{ 'winner' if home and away and away.score > home.score }}">
                 {{ away.score if away and away.score is not none else 0 }}
             </span>
-            {% else %}
-            <span class="banner-score-num tbd">—</span>
-            <span class="banner-sep">:</span>
-            <span class="banner-score-num tbd">—</span>
-            {% endif %}
         </div>
         <div class="banner-team right">
             <span class="banner-team-label">Away</span>
-            <span class="banner-team-name">Team 2</span>
+            <span class="banner-team-name">Team {{ away.participants[0].user.username }}</span>
         </div>
     </div>
 

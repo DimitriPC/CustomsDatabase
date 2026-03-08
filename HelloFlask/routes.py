@@ -172,11 +172,14 @@ def addGame(matchId):
             match_id = matchId,
             home_team_id = home_team_id,
             away_team_id = away_team_id,
-            score_home_team = request.form.get('score1'),
+            score_home_team = int(request.form.get('score1')),
             score_away_team = request.form.get('score2'),
             photo_url = db_path,
             winner_team_id = winner_team_id
         )
+
+        winner_team = db.session.get(MatchTeam, winner_team_id)
+        winner_team.score += 1;
 
         db.session.add(new_game)
         db.session.commit()
