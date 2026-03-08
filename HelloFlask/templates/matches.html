@@ -312,17 +312,17 @@
             <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
                 <div class="match-top">
                     <div>
-                        <div class="match-name">{{ match.status }}</div>
+                        <div class="match-name">{{ match.description }}</div>
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
                 </div>
                 <div class="match-score">
                     <div class="team-block">
                         <span class="team-dot team1-dot"></span>
-                        <span class="team-name">Home</span>
+                        <span class="team-name"> Team {{  match.match_teams[0].participants[0].user.username  }} </span>
                     </div>
                     <div class="score-display">
-                        <span class="score-num tbd"> Team {{  match.match_teams[0].participants[0].user.username  }}  </span>
+                        <span class="score-num tbd">-</span>
                         <span class="score-sep">:</span>
                         <span class="score-num tbd">—</span>
                     </div>
