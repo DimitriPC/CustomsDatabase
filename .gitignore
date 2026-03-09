@@ -33,3 +33,6 @@ Thumbs.db
 
 # Migrations (optional — some people include these)
 # migrations/
+
+#Nohup
+nohup.out
