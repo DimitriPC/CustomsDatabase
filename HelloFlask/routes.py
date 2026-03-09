@@ -1,6 +1,6 @@
 ﻿from flask_login.utils import _get_user
 from HelloFlask import app, db
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_bcrypt import bcrypt
 import sqlite3, json, os
 from flask_sqlalchemy import SQLAlchemy
@@ -34,17 +34,13 @@ def login():
 
         # account does not exist
         if not user:
-            return render_template(
-                "login.html",
-                message="Ce compte n'existe pas. Le username ou le mot de passe pourrait etre errone"
-            )
+            flash("Ce compte n'existe pas. Le username ou le mot de passe pourrait etre errone")
+            return redirect(url_for('login'))
 
         # account exists but no password
         if not user.password:
-            return render_template(
-                "login.html",
-                message="Aucun mot de passe configure pour ce compte. Veuillez creer un compte"
-            )
+            flash("Aucun mot de passe configure pour ce compte. Veuillez creer un compte")
+            return redirect(url_for('login'))
 
         # check password
         if bcrypt.checkpw(enteredPassword, user.password.encode("utf-8")):
@@ -55,10 +51,8 @@ def login():
             next = request.args.get("next")
             return redirect(next or url_for('matches'))
 
-        return render_template(
-            "login.html",
-            message="Le mot de passe est incorrect pour ce compte"
-        )
+        flash("Le mot de passe est incorrect pour ce compte")
+        return redirect(url_for('login'))
 
     return render_template("login.html")
 
@@ -77,10 +71,8 @@ def register():
 
             # If password already configured
             if user.password:
-                return render_template(
-                    "register.html",
-                    message="Ce compte existe deja. Veuillez vous connecter"
-                )
+                flash("Ce compte existe deja. Veuillez vous connecter")
+                return redirect(url_for('login'))
 
             # User exists but no password yet
             salt = bcrypt.gensalt()
@@ -354,3 +346,12 @@ def record_game(team_home_ids, team_away_ids, winner):
 @app.route('/match/<int:match_id>/edit', methods=['GET', 'POST'])
 def edit_match(match_id):
     return "success"
+
+
+
+@app.route('/match/<int:match_id>/complete', methods=['POST'])
+def complete_match(match_id):
+    match = db.session.get(Match, match_id)
+    match.status = 'completed'
+    db.session.commit()
+    return redirect(url_for('games', matchId=match_id))

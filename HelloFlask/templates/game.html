@@ -370,8 +370,27 @@ header {
     border: 1px dashed var(--border);
     border-radius: var(--radius);
 }
+
+.complete-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    padding: 12px 32px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.complete-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,0.06);
+}
 {% endblock %}
-    
+
 {% block content %}
 <div class="page">
 
@@ -398,7 +417,7 @@ header {
             <span class="banner-team-name">Team {{ home.participants[0].user.username }}</span>
         </div>
         <div class="banner-score">
-            
+
             <span class="banner-score-num {{ 'winner' if home and away and home.score > away.score }}">
                 {{ home.score if home and home.score is not none else 0 }}
             </span>
@@ -469,6 +488,10 @@ header {
         <div class="empty">No games yet — add the first one above</div>
         {% endif %}
     </div>
-
+    {% if match.status == 'ongoing' %}
+    <form method="POST" action="{{ url_for('complete_match', match_id=match.match_id) }}" style="margin-top: 40px; text-align: center;">
+        <button type="submit" class="complete-btn">✅ Mark as Completed</button>
+    </form>
+    {% endif %}
 </div>
 {% endblock %}

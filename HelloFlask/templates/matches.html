@@ -309,9 +309,7 @@
             <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
                 <div class="match-top">
                     <div>
-                        {% if match.description %}
-                        <div class="match-name">{{ match.description }}</div>
-                        {% endif %}
+                        <div class="match-name">FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}</div>
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
                 </div>
@@ -364,7 +362,7 @@
             <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
                 <div class="match-top">
                     <div>
-                        <div class="match-name">{{ match.status }}</div>
+                        <div class="match-name">FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}</div>
                         <div class="match-date">{{ match.date_match.strftime('%b %d, %Y') }}</div>
                     </div>
                     <span class="status-badge badge-completed">Final</span>
@@ -372,7 +370,7 @@
                 <div class="match-score">
                     <div class="team-block">
                         <span class="team-dot team1-dot"></span>
-                        <span class="team-name">Home</span>
+                        <span class="team-name">Team {{  match.match_teams[0].participants[0].user.username  }}</span>
                     </div>
                     <div class="score-display">
                         <span class="score-num {{ 'winner' if (home_score or 0) > (away_score or 0) }}">{{ home_score }}</span>
@@ -381,7 +379,7 @@
                     </div>
                     <div class="team-block right">
                         <span class="team-dot team2-dot"></span>
-                        <span class="team-name">Away</span>
+                        <span class="team-name">Team {{  match.match_teams[1].participants[0].user.username  }}</span>
                     </div>
                 </div>
                 <span class="arrow">›</span>
