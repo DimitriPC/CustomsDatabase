@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS
 import os
 
 
@@ -8,6 +9,8 @@ db = SQLAlchemy()   # create db object (no app yet)
 login_manager = LoginManager()
 
 app = Flask(__name__)
+CORS(app)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     os.environ.get("DATABASE_URL") or
     "postgresql://dimitri:4939@localhost:5432/mydb"

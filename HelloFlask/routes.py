@@ -1,21 +1,22 @@
-﻿from flask_login.utils import _get_user
+﻿import sqlite3, json, os, itertools, math, sys, trueskill
+from flask_login.utils import _get_user
 from HelloFlask import app, db
-from flask import Flask, render_template, url_for, redirect, request, session, flash
+from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify
 from flask_bcrypt import bcrypt
-import sqlite3, json, os
 from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 from datetime import datetime, timedelta
 from .models import User, Match, MatchParticipant, MatchTeam, GameParticipantStats, Game
-from sqlalchemy import select, insert, func, Integer
+from sqlalchemy import select, insert, func, Integer, true
 from sqlalchemy.orm import joinedload
 from random import randint, choice
 from flask_login import login_user, login_required, logout_user, current_user
 from trueskill import Rating, TrueSkill
-import sys
 from .models import TeamSide
 from werkzeug.utils import secure_filename
 from zoneinfo import ZoneInfo
+from itertools import combinations
+
 
 
 
@@ -355,3 +356,42 @@ def complete_match(match_id):
     match.status = 'completed'
     db.session.commit()
     return redirect(url_for('games', matchId=match_id))
+
+@app.route('/api/users', methods=['GET'])
+def users():
+    return jsonify(
+        {
+            "users": [
+                'arpan',
+                'zach',
+                'jessie'
+            ]
+        }
+    )
+
+
+def find_balanced_teams(players):
+    n = len(players)
+    half = n // 2
+    best_split = None
+    best_diff = float('inf')
+    
+    for team1 in combinations(players, half):
+        team2 = [p for p in players if p not in team1]
+        
+        prob = win_probability(team1, team2)  # your formula
+        diff = abs(prob - 0.5)
+        
+        if diff < best_diff:
+            best_diff = diff
+            best_split = (team1, team2)
+    
+    return best_split
+
+def win_probability(team1, team2):
+    delta_mu = sum(r.mu for r in team1) - sum(r.mu for r in team2)
+    sum_sigma = sum(r.sigma ** 2 for r in itertools.chain(team1, team2))
+    size = len(team1) + len(team2)
+    denom = math.sqrt(size * (trueskill.BETA * trueskill.BETA) + sum_sigma)
+    ts = trueskill.global_env()
+    return ts.cdf(delta_mu / denom)

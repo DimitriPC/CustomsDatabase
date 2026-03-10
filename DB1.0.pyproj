@@ -545,6 +545,7 @@
     <Folder Include="migrations\" />
     <Folder Include="migrations\versions\" />
     <Folder Include="migrations\__pycache__\" />
+    <Folder Include="frontend\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
