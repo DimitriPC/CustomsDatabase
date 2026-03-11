@@ -195,6 +195,7 @@ def add_match():
             date_match = request.form.get('date_match'),
             status     = request.form.get('status'),
             first_to   = request.form.get('first_to'),
+            description = request.form.get('description') or None
         )
         db.session.add(new_match)
         db.session.flush()  # get new_match.match_id before committing
@@ -359,15 +360,9 @@ def complete_match(match_id):
 
 @app.route('/api/users', methods=['GET'])
 def users():
-    return jsonify(
-        {
-            "users": [
-                'arpan',
-                'zach',
-                'jessie'
-            ]
-        }
-    )
+    users = User.query.all()
+    return jsonify([u.to_json() for u in users])
+    
 
 
 def find_balanced_teams(players):

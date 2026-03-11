@@ -28,6 +28,17 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.user_id)
 
+    def to_json(self):
+        return {
+            "userId": self.user_id,
+            "username": self.username,
+            "realName": self.real_name,
+            "isAdmin": self.is_admin,
+            "mu": self.mu,
+            "sigma": self.sigma,
+            "games": self.games
+        }
+
 class Result(IntEnum):
     win_reg = 3
     win_over = 2
