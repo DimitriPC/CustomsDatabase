@@ -46,9 +46,7 @@ def login():
         # check password
         if bcrypt.checkpw(enteredPassword, user.password.encode("utf-8")):
             login_user(user)
-            if (user.real_name == "Dimi"):
-                user.is_admin = True;
-                session["is_admin"] = user.is_admin
+            session["is_admin"] = user.is_admin
             next = request.args.get("next")
             return redirect(next or url_for('matches'))
 
