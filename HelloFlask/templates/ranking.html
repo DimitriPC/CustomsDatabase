@@ -345,6 +345,11 @@
     .row-mu, .row-sigma { display: none; }
     .header-title { font-size: 30px; }
   }
+    .row-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
 {% endblock %}
 {% block content %}
 <div class="page">
@@ -396,14 +401,16 @@
 
     <div id="table">
         {% for user, rating in ranking %}
-        <div class="row">
-            <div class="row-rank">{{ "%02d"|format(loop.index) }}</div>
-            <div class="row-name">{{ user.username }}</div>
-            <div class="row-rating">{{ "%.2f"|format(rating) }}</div>
-            <div class="row-mu">{{ "%.2f"|format(user.mu) }}</div>
-            <div class="row-sigma">{{ "%.2f"|format(user.sigma) }}</div>
-            <div class="row-games">{{ user.games }}</div>
-        </div>
+        <a href="{{ url_for('user_profile', user_id=user.user_id) }}" class="row-link">
+            <div class="row">
+                <div class="row-rank">{{ "%02d"|format(loop.index) }}</div>
+                <div class="row-name">{{ user.username }}</div>
+                <div class="row-rating">{{ "%.2f"|format(rating) }}</div>
+                <div class="row-mu">{{ "%.2f"|format(user.mu) }}</div>
+                <div class="row-sigma">{{ "%.2f"|format(user.sigma) }}</div>
+                <div class="row-games">{{ user.games }}</div>
+            </div>
+        </a>
         {% endfor %}
     </div>
 

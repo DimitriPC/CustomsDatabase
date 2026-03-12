@@ -362,6 +362,28 @@ def complete_match(match_id):
 def users():
     users = User.query.all()
     return jsonify([u.to_json() for u in users])
+
+@app.route('/user/<int:user_id>')
+@login_required
+def user_profile(user_id):
+    profile_user = db.session.get(User, user_id)
+    # get all matches this user participated in
+    matches = Match.query.join(MatchTeam).join(MatchParticipant)\
+        .filter(MatchParticipant.user_id == user_id)\
+        .order_by(Match.date_match.desc()).all()
+    return render_template('user_profile.html', profile_user=profile_user, matches=matches)
+
+@app.route('/user/<int:user_id>/boost-sigma', methods=['POST'])
+@login_required
+def boost_sigma(user_id):
+    if not current_user.is_admin:
+        return redirect(url_for('user_profile', user_id=user_id))
+    user = db.session.get(User, user_id)
+    new_sigma = request.form.get('new_sigma')
+    if new_sigma:
+        user.sigma = float(new_sigma)
+        db.session.commit()
+    return redirect(url_for('user_profile', user_id=user_id))
     
 
 

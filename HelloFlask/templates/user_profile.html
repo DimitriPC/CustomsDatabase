@@ -1,0 +1,410 @@
+﻿{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }}{% endblock %}
+
+{% block styles %}
+
+.profile-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+/* ── Profile header ── */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent));
+}
+
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--surface3);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-username {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent3) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-stats-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.profile-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+}
+
+.profile-stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* ── Rating card ── */
+.rating-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rating-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.rating-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rating-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.rating-block {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    flex: 1;
+    min-width: 100px;
+}
+
+.rating-block-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+
+.rating-block-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+}
+
+.mu-val { color: var(--accent); }
+.sigma-val { color: var(--accent3); }
+.conservative-val { color: var(--text); }
+
+/* ── Admin boost ── */
+.boost-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.boost-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.boost-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    outline: none;
+    width: 90px;
+    transition: border-color 0.2s;
+}
+
+.boost-input:focus {
+    border-color: var(--accent3);
+}
+
+.boost-btn {
+    background: var(--accent3);
+    color: #0d0f14;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+}
+
+.boost-btn:hover { opacity: 0.85; }
+
+/* ── Section ── */
+.section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    color: var(--accent3);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title .bar {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ── Match list ── */
+.match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.match-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.15s;
+    animation: fadeUp 0.4s ease both;
+    cursor: pointer;
+}
+
+.match-row:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.match-row-left { display: flex; flex-direction: column; gap: 3px; }
+
+.match-row-desc {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+}
+
+.match-row-date {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.match-row-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.match-status {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.badge-ongoing {
+    background: rgba(71,194,255,0.12);
+    color: var(--accent3);
+    border: 1px solid rgba(71,194,255,0.25);
+}
+
+.badge-completed {
+    background: rgba(107,115,148,0.12);
+    color: var(--muted);
+    border: 1px solid rgba(107,115,148,0.2);
+}
+
+.match-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+}
+
+.empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding: 24px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrap">
+
+    {# ── Profile header ── #}
+    <div class="profile-header">
+        <div class="profile-avatar">{{ profile_user.username[:2] | upper }}</div>
+        <div class="profile-info">
+            <div class="profile-username">{{ profile_user.username }}</div>
+            <div class="profile-stats-row">
+                <div class="profile-stat">
+                    <span class="profile-stat-val">{{ matches | length }}</span>
+                    <span class="profile-stat-label">Matches</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-val">{{ matches | selectattr('status', 'equalto', 'completed') | list | length }}</span>
+                    <span class="profile-stat-label">Completed</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-val">{{ matches | selectattr('status', 'equalto', 'ongoing') | list | length }}</span>
+                    <span class="profile-stat-label">Ongoing</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── TrueSkill Rating ── #}
+    <div class="rating-card">
+        <div class="rating-card-title">
+            ⭐ TrueSkill Rating
+        </div>
+        <div class="rating-row">
+            <div class="rating-block">
+                <div class="rating-block-label">Skill (μ)</div>
+                <div class="rating-block-val mu-val">{{ profile_user.mu | round(2) }}</div>
+            </div>
+            <div class="rating-block">
+                <div class="rating-block-label">Uncertainty (σ)</div>
+                <div class="rating-block-val sigma-val">{{ profile_user.sigma | round(2) }}</div>
+            </div>
+            <div class="rating-block">
+                <div class="rating-block-label">Conservative (μ - 3σ)</div>
+                <div class="rating-block-val conservative-val">
+                    {{ (profile_user.mu - 3 * profile_user.sigma) | round(2) }}
+                </div>
+            </div>
+        </div>
+
+        {# ── Admin sigma boost ── #}
+        {% if current_user.is_admin %}
+        <form method="POST" action="{{ url_for('boost_sigma', user_id=profile_user.user_id) }}">
+            <div class="boost-form">
+                <span class="boost-label">🔧 Admin — set σ to:</span>
+                <input type="number" name="new_sigma" class="boost-input"
+                       step="0.01" min="0.1"
+                       value="{{ profile_user.sigma | round(2) }}"
+                       placeholder="sigma">
+                <button type="submit" class="boost-btn">Apply</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+
+    {# ── Matches ── #}
+    <div class="section-title">
+        🎮 Matches
+        <span class="bar"></span>
+    </div>
+
+    <div class="match-list">
+        {% if matches %}
+        {% for match in matches %}
+        {% set home = match.match_teams | selectattr('side.value', 'equalto', 'home') | first | default(none) %}
+        {% set away = match.match_teams | selectattr('side.value', 'equalto', 'away') | first | default(none) %}
+        <div class="match-row" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
+            <div class="match-row-left">
+                <div class="match-row-desc">
+                    FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}
+                </div>
+                <div class="match-row-date">{{ match.date_match.strftime('%b %d, %Y') if match.date_match }}</div>
+            </div>
+            <div class="match-row-right">
+                {% if match.status == 'completed' and home and away %}
+                <span class="match-score">{{ home.score }} : {{ away.score }}</span>
+                {% endif %}
+                <span class="match-status {{ 'badge-ongoing' if match.status == 'ongoing' else 'badge-completed' }}">
+                    {{ 'Live' if match.status == 'ongoing' else 'Final' }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty">No matches yet</div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
