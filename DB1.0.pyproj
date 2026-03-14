@@ -1024,6 +1024,9 @@
     <Folder Include="migrations\versions\" />
     <Folder Include="migrations\__pycache__\" />
     <Folder Include="frontend\" />
+    <Folder Include="static\" />
+    <Folder Include="static\dist\" />
+    <Folder Include="static\dist\assets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
@@ -5511,6 +5514,11 @@
     <Content Include="migrations\script.py.mako" />
     <Content Include="migrations\__pycache__\env.cpython-312.pyc" />
     <Content Include="requirements.txt" />
+    <Content Include="static\dist\assets\index-BMGVY35A.js" />
+    <Content Include="static\dist\assets\index-DcS2q0yF.js" />
+    <Content Include="static\dist\assets\index-DrpzhaZ1.css" />
+    <Content Include="static\dist\index.html" />
+    <Content Include="static\dist\vite.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

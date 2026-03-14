@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(unique=True, nullable=False)
     real_name: Mapped[str] = mapped_column(unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(db.String(60), nullable=True)
+    password: Mapped[str] = mapped_column(db.String(255), nullable=True)
     is_admin: Mapped[bool] = mapped_column(default=False)
     mu: Mapped[float] = mapped_column(server_default='25.0')
     sigma: Mapped[float] = mapped_column(server_default='8.333')

