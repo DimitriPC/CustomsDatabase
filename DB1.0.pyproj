@@ -5489,6 +5489,7 @@
     <Content Include="frontend\src\index.css" />
     <Content Include="frontend\src\main.jsx" />
     <Content Include="frontend\src\MakeTeams.jsx" />
+    <Content Include="frontend\src\NavBar.jsx" />
     <Content Include="frontend\vite.config.js" />
     <Content Include="HelloFlask\static\uploads\2\134054678217081009.jpg" />
     <Content Include="HelloFlask\static\uploads\2\inverted.jpg" />
