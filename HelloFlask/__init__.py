@@ -9,7 +9,7 @@ db = SQLAlchemy()   # create db object (no app yet)
 login_manager = LoginManager()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins='*')
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     os.environ.get("DATABASE_URL") or

@@ -16,7 +16,7 @@ from .models import TeamSide
 from werkzeug.utils import secure_filename
 from zoneinfo import ZoneInfo
 from itertools import combinations
-
+from flask_cors import CORS
 
 
 
@@ -371,6 +371,23 @@ def user_profile(user_id):
         .order_by(Match.date_match.desc()).all()
     return render_template('user_profile.html', profile_user=profile_user, matches=matches)
 
+@app.route('/api/maketeams', methods=['POST'])
+def make_teams():
+    data = request.get_json()
+    usernames = data.get('players', [])
+    
+    users = User.query.filter(User.username.in_(usernames)).all()
+    players = [{'username': u.username, 'rating': trueskill.Rating(mu=u.mu, sigma=u.sigma)} for u in users]
+
+    best_split = find_balanced_teams(players)
+
+    return jsonify({
+        'teamA': [p['username'] for p in best_split['team1']],
+        'teamB': [p['username'] for p in best_split['team2']],
+        'quality': round(best_split['probability'] * 100, 1)
+    })
+    
+
 @app.route('/user/<int:user_id>/boost-sigma', methods=['POST'])
 @login_required
 def boost_sigma(user_id):
@@ -390,22 +407,27 @@ def find_balanced_teams(players):
     half = n // 2
     best_split = None
     best_diff = float('inf')
-    
+
     for team1 in combinations(players, half):
-        team2 = [p for p in players if p not in team1]
-        
-        prob = win_probability(team1, team2)  # your formula
+        team1_usernames = {p['username'] for p in team1}
+        team2 = [p for p in players if p['username'] not in team1_usernames]
+
+        prob = win_probability(team1, team2)
         diff = abs(prob - 0.5)
-        
+
         if diff < best_diff:
             best_diff = diff
-            best_split = (team1, team2)
-    
+            best_split = {
+                "team1": list(team1),
+                "team2": team2,
+                "probability": prob
+            }
+
     return best_split
 
 def win_probability(team1, team2):
-    delta_mu = sum(r.mu for r in team1) - sum(r.mu for r in team2)
-    sum_sigma = sum(r.sigma ** 2 for r in itertools.chain(team1, team2))
+    delta_mu = sum(p['rating'].mu for p in team1) - sum(p['rating'].mu for p in team2)
+    sum_sigma = sum(p['rating'].sigma ** 2 for p in itertools.chain(team1, team2))
     size = len(team1) + len(team2)
     denom = math.sqrt(size * (trueskill.BETA * trueskill.BETA) + sum_sigma)
     ts = trueskill.global_env()
