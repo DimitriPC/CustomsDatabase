@@ -17,6 +17,8 @@ from werkzeug.utils import secure_filename
 from zoneinfo import ZoneInfo
 from itertools import combinations
 from flask_cors import CORS
+from flask import send_from_directory
+
 
 
 
@@ -399,8 +401,16 @@ def boost_sigma(user_id):
         user.sigma = float(new_sigma)
         db.session.commit()
     return redirect(url_for('user_profile', user_id=user_id))
-    
 
+
+@app.route('/quick-teams')
+@login_required
+def quick_teams():
+    return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist'), 'index.html')
+    
+@app.route('/assets/<path:filename>')
+def react_assets(filename):
+    return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist', 'assets'), filename)
 
 def find_balanced_teams(players):
     n = len(players)

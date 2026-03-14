@@ -1,10 +1,11 @@
 function Navbar() {
   return (
     <nav className="navbar">
-      <a href="http://localhost:5000/matches" className="nav-logo">R6 Stats</a>
+      <a href="/matches" className="nav-logo">R6 Stats</a>
       <div className="nav-links">
-        <a href="http://localhost:5000/matches" className="nav-link">Matches</a>
-        <a href="http://localhost:5000/quick-teams" className="nav-link">Quick Teams</a>
+        <a href="/matches" className="nav-link">Matches</a>
+        <a href="/ranking" className="nav-link">Ranking</a>
+        <a href="/quick-teams" className="nav-link active">Quick Teams</a>
       </div>
     </nav>
   )

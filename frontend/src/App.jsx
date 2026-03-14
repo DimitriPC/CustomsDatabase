@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch("http://127.0.0.1:5001/api/users")
+      const response = await fetch("/api/users")
       const data = await response.json()
       setUsers(data)
     }
@@ -30,7 +30,7 @@ function App() {
       return
     }
     setLoading(true)
-    const response = await fetch("http://127.0.0.1:5001/api/maketeams", {
+    const response = await fetch("/api/maketeams", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ players })

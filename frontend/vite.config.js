@@ -14,6 +14,7 @@ export default defineConfig({
       '/api': 'http://web:5000'
     }
   },
+  base: '/',
   build: {
     outDir: '../static/dist'
   }

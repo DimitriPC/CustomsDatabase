@@ -586,6 +586,10 @@
                class="nav-link {{ 'active' if request.endpoint == 'ranking' }}">
                 Ranking
             </a>
+            <a href="{{ url_for('quick_teams') }}"
+               class="nav-link {{ 'active' if request.endpoint == 'quick_teams' }}">
+                Make Teams
+            </a>
             {% if current_user.is_admin %}
             <a href="{{ url_for('add_match') }}"
                class="nav-link {{ 'active' if request.endpoint == 'add_match' }}">
