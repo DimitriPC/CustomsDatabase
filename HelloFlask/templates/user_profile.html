@@ -404,16 +404,16 @@
             <div class="profile-username">{{ profile_user.username }}</div>
             <div class="profile-stats-row">
                 <div class="profile-stat">
-                    <span class="profile-stat-val">{{ matches | length }}</span>
-                    <span class="profile-stat-label">Matches</span>
+                    <span class="profile-stat-val">{{ profile_user.games }}</span>
+                    <span class="profile-stat-label">Games</span>
                 </div>
                 <div class="profile-stat">
-                    <span class="profile-stat-val">{{ matches | selectattr('status', 'equalto', 'completed') | list | length }}</span>
-                    <span class="profile-stat-label">Completed</span>
+                    <span class="profile-stat-val">{{ profile_user.wins }}</span>
+                    <span class="profile-stat-label">Wins</span>
                 </div>
                 <div class="profile-stat">
-                    <span class="profile-stat-val">{{ matches | selectattr('status', 'equalto', 'ongoing') | list | length }}</span>
-                    <span class="profile-stat-label">Ongoing</span>
+                    <span class="profile-stat-val">{{ profile_user.losses }}</span>
+                    <span class="profile-stat-label">Losses</span>
                 </div>
             </div>
         </div>
