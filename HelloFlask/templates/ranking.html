@@ -350,6 +350,24 @@
         color: inherit;
         display: block;
     }
+
+.refresh-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.refresh-btn:hover {
+    background: var(--accent-dim);
+    color: #fff;
+}
 {% endblock %}
 {% block content %}
 <div class="page">
@@ -364,6 +382,11 @@
             <div>PLAYERS <strong>{{ ranking|length }}</strong></div>
             <div>UPDATED <strong>{{ now.strftime('%Y-%m-%d') }}</strong></div>  {# change to time of last game added #}
         </div>
+        {% if current_user.is_admin %}
+        <form method="POST">
+            <button type="submit" class="refresh-btn">⟳ RECALCULATE</button>
+        </form>
+        {% endif %}
     </header>
 
     <div class="podium">

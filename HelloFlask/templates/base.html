@@ -457,6 +457,11 @@
                 color: var(--text);
             }
 
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
 
         /* ── Navbar ── */
         .navbar {
@@ -600,10 +605,12 @@
 
         <div class="nav-right">
             {% if current_user.is_authenticated %}
-            <div class="nav-user">
-                <div class="nav-avatar">{{ current_user.username[:2] }}</div>
-                <span>{{ current_user.username }}</span>
-            </div>
+            <a href="{{ url_for('user_profile', user_id=current_user.user_id) }}">
+                <div class="nav-user">
+                    <div class="nav-avatar">{{ current_user.username[:2] }}</div>
+                    <span>{{ current_user.username }}</span>
+                </div>
+            </a>
             <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
             {% else %}
             <a href="{{ url_for('login') }}" class="nav-link">Login</a>
