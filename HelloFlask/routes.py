@@ -1,7 +1,7 @@
 ﻿import sqlite3, json, os, itertools, math, sys, trueskill
 from flask_login.utils import _get_user
 from HelloFlask import app, db
-from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify
+from flask import Flask, render_template, url_for, redirect, request, session, flash, jsonify, abort
 from flask_bcrypt import bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
@@ -61,7 +61,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
+    abort(404)
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"].encode("utf-8")
