@@ -459,3 +459,132 @@ header {
     }
 /* ── End Navbar ── */
 
+/* ── Mode Toggle ── */
+.mode-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 5px;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .mode-btn:hover {
+        color: var(--text);
+        background: var(--surface2);
+    }
+
+    .mode-btn.active {
+        background: var(--accent);
+        color: #0d0f14;
+    }
+
+/* ── Available Player Pool ── */
+.available-pool {
+    margin-bottom: 20px;
+}
+
+.pool-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.pool-players {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pool-player {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.pool-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.add-btn {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.15s;
+}
+
+    .add-btn.a {
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+
+        .add-btn.a:hover {
+            background: rgba(232, 255, 71, 0.1);
+        }
+
+    .add-btn.b {
+        color: var(--accent2);
+        border-color: var(--accent2);
+    }
+
+        .add-btn.b:hover {
+            background: rgba(255, 79, 109, 0.1);
+        }
+
+/* ── Manual Teams ── */
+.manual-teams {
+    margin-top: 4px;
+}
+
+.empty-team {
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 8px 0;
+    font-style: italic;
+}
+
+.remove-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s;
+}
+
+    .remove-btn:hover {
+        color: var(--accent2);
+    }
+

@@ -372,7 +372,7 @@
                 <div class="match-score">
                     <div class="team-block">
                         <span class="team-dot team1-dot"></span>
-                        <span class="team-name">Team {{  match.match_teams[0].participants[0].user.username  }}</span>
+                        <span class="team-name">Team {{  home.participants[0].user.username  }}</span>
                     </div>
                     <div class="score-display">
                         <span class="score-num {{ 'winner' if (home_score or 0) > (away_score or 0) }}">{{ home_score }}</span>
@@ -381,7 +381,7 @@
                     </div>
                     <div class="team-block right">
                         <span class="team-dot team2-dot"></span>
-                        <span class="team-name">Team {{  match.match_teams[1].participants[0].user.username  }}</span>
+                        <span class="team-name">Team {{  away.participants[0].user.username  }}</span>
                     </div>
                 </div>
                 <span class="arrow">›</span>
