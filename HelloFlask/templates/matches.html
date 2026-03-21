@@ -186,7 +186,7 @@
             flex: 1;
         }
 
-            
+
 
         .team-dot {
             width: 7px;
@@ -286,6 +286,100 @@
         color: var(--accent);
         background: rgba(232,255,71,0.08);
     }
+.delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 44px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+    z-index: 1;
+}
+
+.delete-btn:hover {
+    color: var(--accent);
+    background: rgba(232,255,71,0.08);
+}
+/*  Modal  */
+.modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    max-width: 420px;
+    width: 90%;
+    animation: fadeUp 0.2s ease both;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent2);
+}
+
+.modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--accent2);
+    margin-bottom: 12px;
+}
+
+.modal-text {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.modal-cancel:hover {
+    border-color: var(--text);
+    color: var(--text);
+}
+
+.modal-confirm {
+    background: var(--accent2);
+    border: none;
+    color: #0d0f14;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.modal-confirm:hover {
+    opacity: 0.85;
+}
+
 {% endblock %}
 {% block content %}
 <header>
@@ -330,11 +424,11 @@
                 </div>
                 {% if current_user.is_admin %}
                 <span class="arrow">›</span>
-                <a href="{{ url_for('edit_match', match_id=match.match_id) }}"
-                   class="edit-btn"
-                   onclick="event.stopPropagation()">
-                    ✏️
-                </a>
+                
+                <button class="delete-btn"
+                        onclick="event.stopPropagation(); document.getElementById('deleteForm').action='{{ url_for('delete_match', match_id=match.match_id) }}'; document.getElementById('deleteModal').style.display='flex';">
+                    🗑️
+                </button>
                 {% endif %}
             </div>
             {% endfor %}
@@ -392,7 +486,20 @@
             {% endif %}
         </div>
     </div>
-
+    <div id="deleteModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div class="modal-box">
+            <div class="modal-title">⚠️ Delete Match</div>
+            <p class="modal-text">This will permanently delete the match and all associated games and stats. This cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="document.getElementById('deleteModal').style.display='none'">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST" action="">
+                    <button type="submit" class="modal-confirm">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

@@ -82,7 +82,7 @@
                 First To
             </div>
             <div class="firstto-row">
-                <input type="number" name="first_to" id="firstTo" min="1" max="999" placeholder="4">
+                <input type="number" name="first_to" id="firstTo" min="1" max="999" value="4" required>
                 <span class="firstto-label">rounds</span>
             </div>
         </div>
@@ -95,12 +95,12 @@
             <div class="score-row">
                 <div class="team-block">
                     <span class="team-name">Home</span>
-                    <input type="number" name="score1" class="score-input" id="score1" min="0" placeholder="0">
+                    <input type="number" name="score1" class="score-input" id="score1" min="0" placeholder="0" required>
                 </div>
                 <span class="vs">VS</span>
                 <div class="team-block">
                     <span class="team-name">Away</span>
-                    <input type="number" name="score2" class="score-input" id="score2" min="0" placeholder="0">
+                    <input type="number" name="score2" class="score-input" id="score2" min="0" placeholder="0" required>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
                 <input type="radio" name="winner" id="winner_home" value="home" checked>
                 <label for="winner_home">🏠 Home</label>
 
-                <input type="radio" name="winner" id="winner_away" value="away">
+                <input type="radio" name="winner" id="winner_away" value="away" required>
                 <label for="winner_away">✈️ Away</label>
             </div>
         </div>
@@ -124,7 +124,7 @@
                 <input type="radio" name="win_type" id="regular" value="regular" checked>
                 <label for="regular">Regular</label>
 
-                <input type="radio" name="win_type" id="overtime" value="overtime">
+                <input type="radio" name="win_type" id="overtime" value="overtime" required>
                 <label for="overtime">Overtime</label>
             </div>
         </div>
@@ -134,7 +134,7 @@
             <div class="card-label">
                 R6 Map
             </div>
-            <input type="text" name="r6map" id="r6map" placeholder="e.g. Bank, Clubhouse, Oregon…">
+            <input type="text" name="r6map" id="r6map" placeholder="e.g. Bank, Clubhouse, Oregon…" required>
         </div>
 
     </div>

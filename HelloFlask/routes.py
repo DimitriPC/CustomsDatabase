@@ -174,7 +174,6 @@ def addGame(matchId):
         )
 
         winner_team = db.session.get(MatchTeam, winner_team_id)
-        winner_team.score += 1;
 
         db.session.add(new_game)
         db.session.commit()
@@ -384,6 +383,20 @@ def update_all_ratings():
 def edit_match(match_id):
     return "success"
 
+@app.route('/match/<int:match_id>/delete', methods=['POST'])
+def delete_match(match_id):  
+    match = db.session.get(Match, match_id)
+    db.session.delete(match)
+    db.session.commit()
+    return redirect(url_for('matches'))
+
+@app.route('/game/<int:game_id>/delete', methods=['POST'])
+def delete_game(game_id):  
+    game = db.session.get(Game, game_id)
+    match_id = game.match_id
+    db.session.delete(game)
+    db.session.commit()
+    return redirect(url_for('games', matchId=match_id))
 
 
 @app.route('/match/<int:match_id>/complete', methods=['POST'])
