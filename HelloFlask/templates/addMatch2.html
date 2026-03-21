@@ -221,7 +221,7 @@ input:focus {
                 {% for team_num in [1, 2] %}
                 <div class="team-card team{{ team_num }}">
                     <div class="team-title">
-                        <span class="dot"></span> Team {{ team_num }}
+                        <span class="dot"></span> Team {{'HOME' if team_num == 1 else 'AWAY'}}
                     </div>
 
                     {% for slot in range(1, 6) %}

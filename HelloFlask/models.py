@@ -1,6 +1,6 @@
 from enum import auto, IntEnum, Enum
 from typing import List
-from sqlalchemy import ForeignKey,ForeignKeyConstraint, UniqueConstraint, Numeric
+from sqlalchemy import ForeignKey,ForeignKeyConstraint, UniqueConstraint, Numeric, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_sqlalchemy import SQLAlchemy
 from HelloFlask import app, db
@@ -8,6 +8,7 @@ from flask_login import UserMixin
 from decimal import Decimal
 from datetime import date, time, datetime
 import os
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
@@ -67,8 +68,21 @@ class MatchTeam(db.Model):
 
     match_team_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     match_id: Mapped[int] = mapped_column(ForeignKey("match.match_id"), nullable=False)
-    score: Mapped[int] = mapped_column(server_default='0')
     side: Mapped[TeamSide]
+
+    @hybrid_property
+    def score(self):
+        return sum(1 for game in self.home_games + self.away_games 
+                   if game.winner_team_id == self.match_team_id)
+
+    @score.expression
+    def score(cls):
+        return (
+            select(func.count(Game.game_id))
+            .where(Game.winner_team_id == cls.match_team_id)
+            .correlate_except(Game)
+            .scalar_subquery()
+        )
 
     match: Mapped["Match"] = relationship(back_populates="match_teams")
 
