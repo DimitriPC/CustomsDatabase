@@ -114,8 +114,7 @@ def logout():
 @app.route('/matches', methods=['GET', 'POST'])
 @login_required
 def matches():
-    stmt = select(Match);
-    matches = db.session.scalars(stmt).all()
+    matches = Match.query.order_by(Match.date_match.desc()).all()
     return render_template("matches.html", matches=matches)
         
 @app.route('/matches/<int:matchId>', methods=['GET', 'POST'])
