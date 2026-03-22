@@ -580,23 +580,23 @@
 <body>
 
     <nav class="navbar">
-        <a href="{{ url_for('matches') }}" class="nav-logo">R6 Stats</a>
+        <a href="{{ url_for('matches.matches') }}" class="nav-logo">R6 Stats</a>
 
         <div class="nav-links">
-            <a href="{{ url_for('matches') }}"
+            <a href="{{ url_for('matches.matches') }}"
                class="nav-link {{ 'active' if request.endpoint == 'matches' }}">
                 Matches
             </a>
-            <a href="{{ url_for('ranking') }}"
+            <a href="{{ url_for('users.ranking') }}"
                class="nav-link {{ 'active' if request.endpoint == 'ranking' }}">
                 Ranking
             </a>
-            <a href="{{ url_for('quick_teams') }}"
+            <a href="{{ url_for('api.quick_teams') }}"
                class="nav-link {{ 'active' if request.endpoint == 'quick_teams' }}">
                 Make Teams
             </a>
             {% if current_user.is_admin %}
-            <a href="{{ url_for('add_match') }}"
+            <a href="{{ url_for('matches.add_match') }}"
                class="nav-link {{ 'active' if request.endpoint == 'add_match' }}">
                 Add Match
             </a>
@@ -605,16 +605,16 @@
 
         <div class="nav-right">
             {% if current_user.is_authenticated %}
-            <a href="{{ url_for('user_profile', user_id=current_user.user_id) }}">
+            <a href="{{ url_for('users.user_profile', user_id=current_user.user_id) }}">
                 <div class="nav-user">
                     <div class="nav-avatar">{{ current_user.username[:2] }}</div>
                     <span>{{ current_user.username }}</span>
                 </div>
             </a>
-            <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
             {% else %}
-            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-            <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+            <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="nav-link">Register</a>
             {% endif %}
         </div>
     </nav>

@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy import ForeignKey,ForeignKeyConstraint, UniqueConstraint, Numeric, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_sqlalchemy import SQLAlchemy
-from HelloFlask import app, db
+from HelloFlask import db
 from flask_login import UserMixin
 from decimal import Decimal
 from datetime import date, time, datetime

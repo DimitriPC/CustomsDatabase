@@ -353,7 +353,7 @@ td.center {
 {% block content %}
 <div class="page">
 
-    <a href="{{ url_for('games', matchId=game.match_id) }}" class="back">‹ Back to Games</a>
+    <a href="{{ url_for('match.games', matchId=game.match_id) }}" class="back">‹ Back to Games</a>
 
     <header>
         <h1>Game Stats</h1>
@@ -375,7 +375,7 @@ td.center {
     </div>
 
     {# ── Form ── #}
-    <form method="POST" action="{{ url_for('enter_stats', gameId=game.game_id) }}">
+    <form method="POST" action="{{ url_for('matches.enter_stats', gameId=game.game_id) }}">
 
         {# ── Home team ── #}
         <div class="team-section">

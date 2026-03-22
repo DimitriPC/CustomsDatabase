@@ -25,7 +25,12 @@
   <ItemGroup>
     <Compile Include="frontend\node_modules\flatted\python\flatted.py" />
     <Compile Include="HelloFlask\models.py" />
-    <Compile Include="HelloFlask\routes.py" />
+    <Compile Include="HelloFlask\routes\admin.py" />
+    <Compile Include="HelloFlask\routes\api.py" />
+    <Compile Include="HelloFlask\routes\auth.py" />
+    <Compile Include="HelloFlask\routes\matches.py" />
+    <Compile Include="HelloFlask\routes\users.py" />
+    <Compile Include="HelloFlask\routes\__init__.py" />
     <Compile Include="HelloFlask\__init__.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\build_env.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\cache.py" />
@@ -922,6 +927,7 @@
     <Folder Include="frontend\public\" />
     <Folder Include="frontend\src\" />
     <Folder Include="frontend\src\assets\" />
+    <Folder Include="HelloFlask\routes\" />
     <Folder Include="HelloFlask\static\" />
     <Folder Include="HelloFlask\static\uploads\" />
     <Folder Include="HelloFlask\static\uploads\2\" />

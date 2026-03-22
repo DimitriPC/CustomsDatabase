@@ -385,7 +385,7 @@
 <header>
     <h1>Matches</h1>
     <p>All your games in one place</p>
-    <a href="{{ url_for('add_match') }}" class="add-btn">+ New Match</a>
+    <a href="{{ url_for('matches.add_match') }}" class="add-btn">+ New Match</a>
 </header>
 
 <div class="page">
@@ -400,7 +400,7 @@
             {% set ongoing = matches | selectattr('status', 'equalto', 'ongoing') | list %}
             {% if ongoing %}
             {% for match in ongoing %}
-            <div class="match-card" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
+            <div class="match-card" onclick="window.location='{{ url_for('matches.games', matchId=match.match_id) }}'">
                 <div class="match-top">
                     <div>
                         <div class="match-name">FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}</div>
@@ -426,7 +426,7 @@
                 <span class="arrow">›</span>
                 
                 <button class="delete-btn"
-                        onclick="event.stopPropagation(); document.getElementById('deleteForm').action='{{ url_for('delete_match', match_id=match.match_id) }}'; document.getElementById('deleteModal').style.display='flex';">
+                        onclick="event.stopPropagation(); document.getElementById('deleteForm').action='{{ url_for('admin.delete_match', match_id=match.match_id) }}'; document.getElementById('deleteModal').style.display='flex';">
                     🗑️
                 </button>
                 {% endif %}
@@ -455,7 +455,7 @@
             {% set home_score = home.score if home else 0 %}
             {% set away_score = away.score if away else 0 %}
 
-            <a href="{{ url_for('games', matchId=match.match_id) }}" class="match-card">
+            <a href="{{ url_for('matches.games', matchId=match.match_id) }}" class="match-card">
                 <div class="match-top">
                     <div>
                         <div class="match-name">FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}</div>

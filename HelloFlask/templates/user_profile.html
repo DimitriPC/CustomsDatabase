@@ -443,7 +443,7 @@
 
         {# ── Admin sigma boost ── #}
         {% if current_user.is_admin %}
-        <form method="POST" action="{{ url_for('boost_sigma', user_id=profile_user.user_id) }}">
+        <form method="POST" action="{{ url_for('users.boost_sigma', user_id=profile_user.user_id) }}">
             <div class="boost-form">
                 <span class="boost-label">🔧 Admin — set σ to:</span>
                 <input type="number" name="new_sigma" class="boost-input"
@@ -467,7 +467,7 @@
         {% for match in matches %}
         {% set home = match.match_teams | selectattr('side.value', 'equalto', 'home') | first | default(none) %}
         {% set away = match.match_teams | selectattr('side.value', 'equalto', 'away') | first | default(none) %}
-        <div class="match-row" onclick="window.location='{{ url_for('games', matchId=match.match_id) }}'">
+        <div class="match-row" onclick="window.location='{{ url_for('matches.games', matchId=match.match_id) }}'">
             <div class="match-row-left">
                 <div class="match-row-desc">
                     FT{{ match.first_to }}{% if match.description %} | {{ match.description }}{% endif %}
@@ -493,7 +493,7 @@
     {% if current_user.is_admin %}
     <div class="admin-card">
         <div class="admin-card-title">🔑 Admin — Change Password</div>
-        <form method="POST" action="{{ url_for('admin_change_password', user_id=profile_user.user_id) }}">
+        <form method="POST" action="{{ url_for('admin.admin_change_password', user_id=profile_user.user_id) }}">
             <div class="pw-fields">
                 <div class="pw-field-group">
                     <label class="pw-field-label" for="new_password">New Password</label>

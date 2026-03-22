@@ -492,7 +492,7 @@ header {
 {% block content %}
 <div class="page">
 
-    <a href="{{ url_for('matches') }}" class="back">‹ Back to Matches</a>
+    <a href="{{ url_for('matches.matches') }}" class="back">‹ Back to Matches</a>
 
     {# ── Match header ── #}
     <header>
@@ -536,7 +536,7 @@ header {
         <span class="bar"></span>
     </div>
 
-    <a href="{{ url_for('addGame', matchId=match.match_id) }}" class="add-game-btn">+ Add Game</a>
+    <a href="{{ url_for('matches.addGame', matchId=match.match_id) }}" class="add-game-btn">+ Add Game</a>
 
     <div class="games-grid">
         {% if match.games %}
@@ -575,11 +575,11 @@ header {
                 </div>
 
                 <div class="game-bottom">
-                    <a href="{{ url_for('enter_stats', gameId=game.game_id) }}" class="stats-link">
+                    <a href="{{ url_for('users.enter_stats', gameId=game.game_id) }}" class="stats-link">
                         📊 Enter Stats ›
                     </a>
                     <button class="delete-game-btn"
-                            onclick="event.stopPropagation(); document.getElementById('deleteForm').action='{{ url_for('delete_game', game_id=game.game_id) }}'; document.getElementById('deleteModal').style.display='flex';">
+                            onclick="event.stopPropagation(); document.getElementById('deleteForm').action='{{ url_for('admin.delete_game', game_id=game.game_id) }}'; document.getElementById('deleteModal').style.display='flex';">
                         🗑️
                     </button>
                 </div>
@@ -592,7 +592,7 @@ header {
         {% endif %}
     </div>
     {% if match.status == 'ongoing' %}
-    <form method="POST" action="{{ url_for('complete_match', match_id=match.match_id) }}" style="margin-top: 40px; text-align: center;">
+    <form method="POST" action="{{ url_for('matches.complete_match', match_id=match.match_id) }}" style="margin-top: 40px; text-align: center;">
         <button type="submit" class="complete-btn">✅ Mark as Completed</button>
     </form>
     {% endif %}

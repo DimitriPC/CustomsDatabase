@@ -424,7 +424,7 @@
 
     <div id="table">
         {% for user, rating in ranking %}
-        <a href="{{ url_for('user_profile', user_id=user.user_id) }}" class="row-link">
+        <a href="{{ url_for('users.user_profile', user_id=user.user_id) }}" class="row-link">
             <div class="row">
                 <div class="row-rank">{{ "%02d"|format(loop.index) }}</div>
                 <div class="row-name">{{ user.username }}</div>
