@@ -47,20 +47,24 @@ function App() {
       body: JSON.stringify({ players })
     })
     const data = await response.json()
-    setTeams(data)
+    setTeams({
+      ...data,
+      teamA: data.teamA.map(name => users.find(u => u.username === name)),
+      teamB: data.teamB.map(name => users.find(u => u.username === name)),
+    })
     setLoading(false)
   }
 
   // --- MANUAL MODE ---
-  const addToTeam = (team, username) => {
-    if (!username) return
-    if (team === 'A') setManualA(prev => [...prev, username])
-    else setManualB(prev => [...prev, username])
+  const addToTeam = (team, user) => {
+    if (!user) return
+    if (team === 'A') setManualA(prev => [...prev, user])
+    else setManualB(prev => [...prev, user])
   }
 
-  const removeFromTeam = (team, username) => {
-    if (team === 'A') setManualA(prev => prev.filter(p => p !== username))
-    else setManualB(prev => prev.filter(p => p !== username))
+  const removeFromTeam = (team, user) => {
+    if (team === 'A') setManualA(prev => prev.filter(p => p.username !== user.username))
+    else setManualB(prev => prev.filter(p => p.username !== user.username))
   }
 
   const calcWinChance = async () => {
@@ -80,10 +84,10 @@ function App() {
   }
 
   const availablePlayers = users.filter(
-    u => ![...manualA, ...manualB].includes(u.username)
+    u => ![...manualA, ...manualB].some(p => p.username === u.username)
   )
 
-  const prob1 = teams ? (teams.quality).toFixed(2) : 50
+  const prob1 = teams ? (teams.quality * 100).toFixed(2) : 50
 
   return (
     <>
@@ -149,8 +153,8 @@ function App() {
                       <div key={u.user_id} className="pool-player">
                         <span>{u.username}</span>
                         <div className="pool-actions">
-                          <button className="add-btn a" onClick={() => addToTeam('A', u.username)}>+ A</button>
-                          <button className="add-btn b" onClick={() => addToTeam('B', u.username)}>+ B</button>
+                          <button className="add-btn a" onClick={() => addToTeam('A', u)}>+ A</button>
+                          <button className="add-btn b" onClick={() => addToTeam('B', u)}>+ B</button>
                         </div>
                       </div>
                     ))}
@@ -164,8 +168,8 @@ function App() {
                   {manualA.length === 0 && <div className="empty-team">No players yet</div>}
                   {manualA.map((p, i) => (
                     <div className="team-player" key={i}>
-                      <div className="player-avatar">{p.substring(0, 2).toUpperCase()}</div>
-                      <span>{p}</span>
+                      <div className="player-avatar">{p.username.substring(0, 2).toUpperCase()}</div>
+                      <span>{p.username}</span>
                       <button className="remove-btn" onClick={() => removeFromTeam('A', p)}>×</button>
                     </div>
                   ))}
@@ -175,8 +179,8 @@ function App() {
                   {manualB.length === 0 && <div className="empty-team">No players yet</div>}
                   {manualB.map((p, i) => (
                     <div className="team-player" key={i}>
-                      <div className="player-avatar">{p.substring(0, 2).toUpperCase()}</div>
-                      <span>{p}</span>
+                      <div className="player-avatar">{p.username.substring(0, 2).toUpperCase()}</div>
+                      <span>{p.username}</span>
                       <button className="remove-btn" onClick={() => removeFromTeam('B', p)}>×</button>
                     </div>
                   ))}
@@ -206,8 +210,8 @@ function App() {
                   <div className="team-block-title"><span className="dot"></span> Team A</div>
                   {teams.teamA.map((p, i) =>
                     <div className="team-player" key={i}>
-                      <div className="player-avatar">{p.substring(0, 2).toUpperCase()}</div>
-                      {p}
+                    <div className="player-avatar">{p.username.substring(0, 2).toUpperCase()}</div>
+                    {p.username}
                     </div>
                   )}
                 </div>
@@ -215,8 +219,8 @@ function App() {
                   <div className="team-block-title"><span className="dot"></span> Team B</div>
                   {teams.teamB.map((p, i) =>
                     <div className="team-player" key={i}>
-                      <div className="player-avatar">{p.substring(0, 2).toUpperCase()}</div>
-                      {p}
+                      <div className="player-avatar">{p.username.substring(0, 2).toUpperCase()}</div>
+                      {p.username}
                     </div>
                   )}
                 </div>

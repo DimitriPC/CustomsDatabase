@@ -3,7 +3,7 @@ import pytesseract
 from PIL import Image
 from matplotlib import pyplot as plt
 
-image_file = "HelloFlask/static/uploads/2/rankingr6.jpeg"
+image_file = "HelloFlask/static/uploads/2/IMG_4002_STATS.JPG"
 img = cv2.imread(image_file)
 
 #https://stackoverflow.com/questions/28816046/
@@ -63,7 +63,7 @@ gray_image = grayscale(img)
 cv2.imwrite("HelloFlask/static/uploads/2/gray.jpg", gray_image)
 
 #Black and white (binarization)
-thresh, im_bw = cv2.threshold(gray_image, 160, 255, cv2.THRESH_BINARY)
+thresh, im_bw = cv2.threshold(gray_image, 185, 255, cv2.THRESH_BINARY)
 cv2.imwrite("HelloFlask/static/uploads/2/bw_image.jpg", im_bw)
 
 #Inverting image 

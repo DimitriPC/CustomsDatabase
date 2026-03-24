@@ -4,8 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27203c2b-095a-4b3e-b7f3-8d5a4f1357e2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>runserver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -5501,6 +5500,7 @@
     <Content Include="frontend\src\NavBar.jsx" />
     <Content Include="frontend\vite.config.js" />
     <Content Include="HelloFlask\static\uploads\2\134054678217081009.jpg" />
+    <Content Include="HelloFlask\static\uploads\2\IMG_4002.JPG" />
     <Content Include="HelloFlask\static\uploads\2\inverted.jpg" />
     <Content Include="HelloFlask\static\uploads\2\rankingCropped.jpeg" />
     <Content Include="HelloFlask\static\uploads\2\rankingr6.jpeg" />

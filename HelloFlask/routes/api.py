@@ -28,6 +28,18 @@ def make_teams():
         'teamB': [p['username'] for p in best_split['team2']],
         'quality': round(best_split['probability'] * 100, 1)
     })
+
+@api_bp.route('/api/winchance', methods=['POST'])
+def win_chance():
+    data = request.get_json()
+    teamA_data = data["teamA"]
+    teamB_data = data["teamB"]
+
+    teamA = [{'username': p["username"], 'rating': trueskill.Rating(mu=p["mu"], sigma=p["sigma"])} for p in teamA_data]
+    teamB = [{'username': p["username"], 'rating': trueskill.Rating(mu=p["mu"], sigma=p["sigma"])} for p in teamB_data]
+
+    win_prob = win_probability(teamA, teamB)
+    return jsonify({'quality': win_prob})
     
 
 @api_bp.route('/quick-teams')
@@ -40,7 +52,7 @@ def react_assets(filename):
     return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist', 'assets'), filename)
 
 
-def find_balanced_teams(players):
+def find_balanced_teams(players):   #players are tuples (username, Rating obj)
     n = len(players)
     half = n // 2
     best_split = None
@@ -69,4 +81,10 @@ def win_probability(team1, team2):
     size = len(team1) + len(team2)
     denom = math.sqrt(size * (trueskill.BETA * trueskill.BETA) + sum_sigma)
     ts = trueskill.global_env()
+    print(f"delta_mu: {delta_mu}")
+    print(f"sum_sigma: {sum_sigma}")
+    print(f"BETA: {trueskill.BETA}")
+    print(f"denom: {denom}")
+    print(f"ratio: {delta_mu / denom}")
+    print(f"prob: {ts.cdf(delta_mu / denom)}")
     return ts.cdf(delta_mu / denom)
