@@ -21,7 +21,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)    # attach db to app
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "auth.login"
 
 from .routes.matches import matches_bp
 from .routes.users import users_bp
