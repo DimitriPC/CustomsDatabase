@@ -1034,6 +1034,7 @@
     <Folder Include="static\dist\assets\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".dockerignore" />
     <Content Include=".env" />
     <Content Include=".env.exemple" />
     <Content Include="aFaire.txt" />
