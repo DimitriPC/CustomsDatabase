@@ -19,6 +19,7 @@ HelloFlask/static/uploads/
 # Database
 *.db
 *.sqlite
+*.sql
 
 # Docker
 *.log

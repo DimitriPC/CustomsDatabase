@@ -38,7 +38,7 @@ def win_chance():
     teamA = [{'username': p["username"], 'rating': trueskill.Rating(mu=p["mu"], sigma=p["sigma"])} for p in teamA_data]
     teamB = [{'username': p["username"], 'rating': trueskill.Rating(mu=p["mu"], sigma=p["sigma"])} for p in teamB_data]
 
-    win_prob = win_probability(teamA, teamB)
+    win_prob = win_probability(teamA, teamB) * 100
     return jsonify({'quality': win_prob})
     
 

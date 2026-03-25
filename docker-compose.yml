@@ -23,7 +23,8 @@ services:
     container_name: customsFrontend
     working_dir: /app
     volumes:
-      - ./frontend:/app        # mounts your local frontend/ folder
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
     ports:
       - "5173:5173"
     command: sh -c "npm install && npm run dev"
@@ -50,3 +51,4 @@ services:
 
 volumes:
   pgdata:
+  frontend_node_modules:
