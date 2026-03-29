@@ -3,6 +3,7 @@ from flask import render_template, url_for, redirect, request, session, flash, a
 from HelloFlask.models import *
 from flask_bcrypt import bcrypt
 from flask_login import login_user, logout_user
+import re
 
 
 
@@ -12,8 +13,16 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login', methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        name = request.form["name"]
-        enteredPassword = request.form["password"].encode("utf-8")
+        name = request.form.get("name")
+        enteredPassword = request.form.get("password")
+
+        if not check_word(name):
+            flash("Veuillez utiliser des characteres valides pour le nom")
+            return redirect(url_for('auth.login'))
+
+        if not check_password(enteredPassword):
+            flash("Veuillez utiliser des characteres valides pour le mdp")
+            return redirect(url_for('auth.login'))
 
         stmt = select(User).where(User.real_name == name)
         user = db.session.scalars(stmt).first()
@@ -29,7 +38,7 @@ def login():
             return redirect(url_for('auth.login'))
 
         # check password
-        if bcrypt.checkpw(enteredPassword, user.password.encode("utf-8")):
+        if bcrypt.checkpw(enteredPassword.encode("utf-8"), user.password.encode("utf-8")):
             if (user.username == 'Dimipc'):
                 user.is_admin = True
             session["is_admin"] = user.is_admin
@@ -93,3 +102,38 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+USERNAME_REGEX = re.compile(r"^[A-Za-z0-9_-]{3,}$")
+
+
+def validate_word(word_to_check: str):
+    if not word_to_check:
+        return False, "Username required"
+
+    word_to_check = word_to_check.strip()
+
+    # 1. length + allowed chars
+    if not USERNAME_REGEX.match(word_to_check):
+        return False, "3 chars min, letters/numbers/_ only"
+
+    # 2. no leading/trailing underscore
+    if word_to_check.startswith("_") or word_to_check.endswith("_"):
+        return False, "Cannot start or end with '_'"
+
+    # 3. no consecutive underscores
+    if "__" in word_to_check:
+        return False, "Cannot contain '__'"
+
+    return True, "Valid username"
+
+def check_word(word_to_check):
+    if not re.match(r"^[A-Za-z0-9_-]+$", word_to_check):
+        return False
+    return True
+
+def check_password(password):
+    if not password:
+        return False
+    if not re.match(r"^[\x21-\x7E]+$", password):
+        return False
+    return True

@@ -1,10 +1,9 @@
 import os, trueskill, itertools, math
 from flask import Blueprint
 from HelloFlask.models import *
-from flask_login import  login_required, current_user
-from flask import url_for, redirect, request, jsonify, send_from_directory
+from flask_login import  login_required
+from flask import request, jsonify, send_from_directory, current_app
 from itertools import combinations
-from HelloFlask import app, db
 
 api_bp = Blueprint('api', __name__)
 
@@ -45,11 +44,11 @@ def win_chance():
 @api_bp.route('/quick-teams')
 @login_required
 def quick_teams():
-    return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist'), 'index.html')
+    return send_from_directory(os.path.join(current_app.root_path, '..', 'static', 'dist'), 'index.html')
     
 @api_bp.route('/assets/<path:filename>')
 def react_assets(filename):
-    return send_from_directory(os.path.join(app.root_path, '..', 'static', 'dist', 'assets'), filename)
+    return send_from_directory(os.path.join(current_app.root_path, '..', 'static', 'dist', 'assets'), filename)
 
 
 def find_balanced_teams(players):   #players are tuples (username, Rating obj)

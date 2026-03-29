@@ -1,9 +1,8 @@
 import os
-from HelloFlask import app, db    # Imports the code from HelloFlask/__init__.py       
-from flask import Flask
+from HelloFlask import create_app, Config, db    # Imports the code from HelloFlask/__init__.py       
 from flask_migrate import Migrate
-from HelloFlask.models import User, Match, MatchParticipant, MatchTeam, GameParticipantStats, Game
 
+app = create_app(Config)
 
 migrate = Migrate(app, db, render_as_batch=False)
 

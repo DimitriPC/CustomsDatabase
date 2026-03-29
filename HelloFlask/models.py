@@ -1,13 +1,10 @@
-from enum import auto, IntEnum, Enum
+from enum import IntEnum, Enum
 from typing import List
-from sqlalchemy import ForeignKey,ForeignKeyConstraint, UniqueConstraint, Numeric, select, func
+from sqlalchemy import ForeignKey, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from flask_sqlalchemy import SQLAlchemy
 from HelloFlask import db
 from flask_login import UserMixin
-from decimal import Decimal
-from datetime import date, time, datetime
-import os
+from datetime import datetime
 from sqlalchemy.ext.hybrid import hybrid_property
 
 class User(db.Model, UserMixin):

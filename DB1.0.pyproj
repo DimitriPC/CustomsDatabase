@@ -12,6 +12,8 @@
     <Name>DB1.0</Name>
     <RootNamespace>DB1.0</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <TestFramework>Pytest</TestFramework>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HelloFlask\tests\conftest.py" />
     <Compile Include="frontend\node_modules\flatted\python\flatted.py" />
     <Compile Include="HelloFlask\models.py" />
     <Compile Include="HelloFlask\routes\admin.py" />
@@ -30,6 +33,8 @@
     <Compile Include="HelloFlask\routes\matches.py" />
     <Compile Include="HelloFlask\routes\users.py" />
     <Compile Include="HelloFlask\routes\__init__.py" />
+    <Compile Include="HelloFlask\tests\auth_test.py" />
+    <Compile Include="HelloFlask\tests\__init__.py" />
     <Compile Include="HelloFlask\__init__.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\build_env.py" />
     <Compile Include="env\Lib\site-packages\pip\_internal\cache.py" />
@@ -1025,6 +1030,7 @@
     <Folder Include="env\Lib\site-packages\pip\__pycache__\" />
     <Folder Include="env\Scripts\" />
     <Folder Include="HelloFlask\" />
+    <Folder Include="HelloFlask\tests\" />
     <Folder Include="migrations\" />
     <Folder Include="migrations\versions\" />
     <Folder Include="migrations\__pycache__\" />

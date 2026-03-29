@@ -2,10 +2,6 @@
 import './App.css'
 import Navbar from './Navbar'
 
-
-console.log("🔥 FILE LOADED");
-alert("JS IS RUNNING");
-
 function App() {
     
   const [users, setUsers] = useState([])
@@ -91,8 +87,6 @@ function App() {
   const availablePlayers = users.filter(
     u => ![...manualA, ...manualB].some(p => p.username === u.username)
   ).sort((a, b) => a.username.localeCompare(b.username));
-
-  console.log(availablePlayers.map(u => u.username)); // ← add this line
 
 
   const prob1 = teams ? (teams.quality).toFixed(2) : 50

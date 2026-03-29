@@ -8,36 +8,58 @@ import os
 db = SQLAlchemy()   # create db object (no app yet)
 login_manager = LoginManager()
 
-app = Flask(__name__)
-app.secret_key = "allo"
-CORS(app, origins='*')
+# ------------------------- 
+# Config classes 
+# ------------------------- 
+class Config: 
+ SECRET_KEY = "dev" 
+ 
+ SQLALCHEMY_DATABASE_URI = "postgresql://dimitri:4939@localhost:5432/mydb"
+ 
+ SQLALCHEMY_TRACK_MODIFICATIONS = False 
+ 
+class TestConfig: 
+ TESTING = True 
+ SECRET_KEY = "test" 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    os.environ.get("DATABASE_URL") or
-    "postgresql://dimitri:4939@localhost:5432/mydb"
-)   #change ?
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-
-db.init_app(app)    # attach db to app
-login_manager.init_app(app)
-login_manager.login_view = "auth.login"
-
-from .routes.matches import matches_bp
-from .routes.users import users_bp
-from .routes.api import api_bp
-from .routes.admin import admin_bp
-from .routes.auth import auth_bp
+ SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:" 
+ 
+ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-app.register_blueprint(matches_bp)
-app.register_blueprint(users_bp)
-app.register_blueprint(api_bp)
-app.register_blueprint(admin_bp)
-app.register_blueprint(auth_bp)
+def create_app(config_class=Config):
+    app = Flask(__name__)
 
-from .models import User
+    app.config.from_object(config_class)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+    CORS(app, origins='*')
+
+    db.init_app(app)
+
+    login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+
+    from .routes.matches import matches_bp
+    from .routes.users import users_bp
+    from .routes.api import api_bp
+    from .routes.admin import admin_bp
+    from .routes.auth import auth_bp
+
+
+    app.register_blueprint(matches_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(auth_bp)
+
+    from .models import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    return app
+
+
+
+
