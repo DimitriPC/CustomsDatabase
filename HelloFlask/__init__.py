@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
-
+from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
 db = SQLAlchemy()   # create db object (no app yet)
@@ -29,6 +29,8 @@ class TestConfig:
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     app.config.from_object(config_class)
 
