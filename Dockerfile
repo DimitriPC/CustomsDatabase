@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "runserver:app"]
+CMD ["gunicorn", "-w", "8", "-b", "0.0.0.0:5000", "--timeout", "120", "runserver:app"]
